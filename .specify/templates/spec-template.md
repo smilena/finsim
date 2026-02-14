@@ -113,3 +113,10 @@
 - **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
 - **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
 - **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
+
+### Constitution Compliance Criteria
+
+- **SC-TEST**: Feature achieves 90% code coverage (statements, branches, functions, lines)
+- **SC-A11Y**: Feature meets WCAG AA accessibility standards (keyboard nav, screen reader, color contrast)
+- **SC-PERF**: Feature maintains Core Web Vitals targets (FCP < 3s on 3G, CLS < 0.1, 60 FPS)
+- **SC-MOBILE**: Feature is fully responsive and mobile-first across all viewport sizes

@@ -31,7 +31,32 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+**Technology Stack Compliance:**
+- [ ] Next.js (latest stable) confirmed as framework
+- [ ] TypeScript with `strict: true` in tsconfig.json
+- [ ] Material UI (MUI) as sole UI component library
+- [ ] Next.js best practices for state, routing, data fetching
+
+**Architecture & Code Quality:**
+- [ ] Clear separation: UI / Domain / Services / Infrastructure
+- [ ] Business logic isolated from UI components
+- [ ] All public APIs strongly typed and documented
+
+**Testing Requirements:**
+- [ ] Jest + React Testing Library configured
+- [ ] Playwright configured for E2E tests
+- [ ] 90% code coverage target established
+- [ ] Test strategy covers unit, integration, and E2E
+
+**UX & Performance:**
+- [ ] Responsive and mobile-first design confirmed
+- [ ] Accessibility requirements defined (WCAG AA)
+- [ ] Performance targets defined (Core Web Vitals)
+- [ ] Centralized MUI theming planned
+
+**Additional Gates:**
+- [ ] No complexity introduced without justification
+- [ ] Definition of Done criteria understood by team
 
 ## Project Structure
 
