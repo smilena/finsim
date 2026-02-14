@@ -38,7 +38,6 @@ const ROWS_PER_PAGE_OPTIONS = [10, 25, 50, 100];
 export function AmortizationTable({
   schedule,
   title,
-  maxRows,
 }: AmortizationTableProps) {
   const { t } = useLanguage();
   const [currentPage, setCurrentPage] = useState(1);

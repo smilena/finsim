@@ -13,7 +13,7 @@ export type Language = 'es' | 'en';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string, options?: Record<string, any>) => string;
+  t: (key: string, options?: Record<string, string | number>) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -26,7 +26,7 @@ const translations = {
 };
 
 // Helper function to get nested translation
-function getNestedTranslation(obj: any, path: string): string {
+function getNestedTranslation(obj: Record<string, unknown>, path: string): string {
   const keys = path.split('.');
   let result = obj;
   
@@ -42,9 +42,9 @@ function getNestedTranslation(obj: any, path: string): string {
 }
 
 // Simple interpolation function
-function interpolate(str: string, options?: Record<string, any>): string {
+function interpolate(str: string, options?: Record<string, string | number>): string {
   if (!options) return str;
-  
+
   return str.replace(/\{\{(\w+)\}\}/g, (match, key) => {
     return options[key] !== undefined ? String(options[key]) : match;
   });
@@ -52,10 +52,8 @@ function interpolate(str: string, options?: Record<string, any>): string {
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>('es');
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     // Load language from localStorage on mount
     const stored = localStorage.getItem(STORAGE_KEY) as Language | null;
     if (stored && (stored === 'es' || stored === 'en')) {
@@ -70,8 +68,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const t = (key: string, options?: Record<string, any>): string => {
-    const translation = getNestedTranslation(translations[language], key);
+  const t = (key: string, options?: Record<string, string | number>): string => {
+    const translation = getNestedTranslation(
+      translations[language] as Record<string, unknown>,
+      key
+    );
     return interpolate(translation, options);
   };
 
