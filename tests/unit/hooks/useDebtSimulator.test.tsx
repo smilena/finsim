@@ -1,7 +1,7 @@
 /**
  * Unit tests for useDebtSimulator hook
  *
- * Real-time UX: No calculate() - results update automatically when inputs valid.
+ * Results are set when calculate() is called; prepayment changes trigger recalc if results exist.
  */
 
 import { renderHook, act, waitFor } from '@testing-library/react';
@@ -22,14 +22,19 @@ describe('useDebtSimulator', () => {
     expect(result.current.results).toBeNull();
   });
 
-  it('does not expose calculate method', () => {
+  it('exposes calculate method', () => {
     const { result } = renderHook(() => useDebtSimulator());
 
-    expect(result.current).not.toHaveProperty('calculate');
+    expect(result.current.calculate).toBeDefined();
+    expect(typeof result.current.calculate).toBe('function');
   });
 
-  it('displays results automatically when inputs are valid', async () => {
+  it('displays results when calculate is called with valid inputs', async () => {
     const { result } = renderHook(() => useDebtSimulator());
+
+    act(() => {
+      result.current.calculate();
+    });
 
     await waitFor(
       () => {
@@ -52,8 +57,12 @@ describe('useDebtSimulator', () => {
     expect(result.current.inputs.loanAmount).toBe(250000);
   });
 
-  it('adds prepayment and triggers immediate recalc', async () => {
+  it('adds prepayment and triggers immediate recalc after first calculation', async () => {
     const { result } = renderHook(() => useDebtSimulator());
+
+    act(() => {
+      result.current.calculate();
+    });
 
     await waitFor(
       () => {
@@ -77,12 +86,16 @@ describe('useDebtSimulator', () => {
       () => {
         expect(result.current.results?.interestSavings).toBeGreaterThan(0);
       },
-      { timeout: 1000 }
+      { timeout: 2000 }
     );
   });
 
   it('removes prepayment and triggers immediate recalc', async () => {
     const { result } = renderHook(() => useDebtSimulator());
+
+    act(() => {
+      result.current.calculate();
+    });
 
     await waitFor(() => expect(result.current.results).not.toBeNull(), { timeout: 2000 });
 
@@ -106,15 +119,19 @@ describe('useDebtSimulator', () => {
       () => {
         expect(result.current.results?.interestSavings).toBe(0);
       },
-      { timeout: 1000 }
+      { timeout: 2000 }
     );
   });
 
-  it('shows validation errors for invalid inputs', async () => {
+  it('shows validation errors for invalid inputs when calculate is called', async () => {
     const { result } = renderHook(() => useDebtSimulator());
 
     act(() => {
       result.current.updateInput('loanAmount', -100);
+    });
+
+    act(() => {
+      result.current.calculate();
     });
 
     await waitFor(
@@ -128,6 +145,10 @@ describe('useDebtSimulator', () => {
 
   it('resets all state', async () => {
     const { result } = renderHook(() => useDebtSimulator());
+
+    act(() => {
+      result.current.calculate();
+    });
 
     await waitFor(() => expect(result.current.results).not.toBeNull(), { timeout: 2000 });
 

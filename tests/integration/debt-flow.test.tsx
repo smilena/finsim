@@ -1,7 +1,7 @@
 /**
- * Integration test for full debt calculation flow with real-time updates
+ * Integration test for full debt calculation flow.
  *
- * No Calculate button - results appear automatically when inputs are valid.
+ * User must click Calcular to see results; then can change inputs and recalculate.
  */
 
 import { render, screen, waitFor } from '@testing-library/react';
@@ -10,6 +10,7 @@ import DebtPage from '@/app/debt/page';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
 import { ThemeModeProvider } from '@/theme/ThemeModeContext';
 import { useThemeMode } from '@/hooks/useThemeMode';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 
 jest.mock('next/navigation', () => ({
   usePathname: () => '/debt',
@@ -20,25 +21,33 @@ jest.mock('@mui/material', () => ({
   useMediaQuery: () => false,
 }));
 
+jest.mock('@/hooks/useIsMobile', () => ({ useIsMobile: () => false }));
+
 function IntegrationWrapper({ children }: { children: React.ReactNode }) {
   const themeMode = useThemeMode();
   const theme = createTheme({ palette: { mode: themeMode.mode } });
   return (
     <ThemeModeProvider value={themeMode}>
-      <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
+      <MuiThemeProvider theme={theme}>
+        <LanguageProvider>{children}</LanguageProvider>
+      </MuiThemeProvider>
     </ThemeModeProvider>
   );
 }
 
 describe('Debt Flow Integration', () => {
-  it('displays results automatically when page loads with valid default inputs', async () => {
+  it('displays results after user clicks Calcular', async () => {
+    const user = userEvent.setup();
     render(
       <IntegrationWrapper>
         <DebtPage />
       </IntegrationWrapper>
     );
 
-    expect(screen.getByText(/Simulador de Deuda/i)).toBeInTheDocument();
+    expect(screen.getByText(/Calcula tu préstamo/i)).toBeInTheDocument();
+
+    const calculateButton = screen.getByRole('button', { name: /calcular/i });
+    await user.click(calculateButton);
 
     await waitFor(
       () => {
@@ -47,26 +56,27 @@ describe('Debt Flow Integration', () => {
       },
       { timeout: 3000 }
     );
-
-    expect(screen.queryByRole('button', { name: /Calcular Amortización/i })).not.toBeInTheDocument();
   });
 
-  it('does not show Calculate button', () => {
+  it('shows Calcular button in the form', () => {
     render(
       <IntegrationWrapper>
         <DebtPage />
       </IntegrationWrapper>
     );
 
-    expect(screen.queryByRole('button', { name: /Calcular Amortización/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /calcular/i })).toBeInTheDocument();
   });
 
-  it('displays amortization schedule when results load', async () => {
+  it('displays amortization schedule after calculation', async () => {
+    const user = userEvent.setup();
     render(
       <IntegrationWrapper>
         <DebtPage />
       </IntegrationWrapper>
     );
+
+    await user.click(screen.getByRole('button', { name: /calcular/i }));
 
     await waitFor(
       () => {
@@ -77,22 +87,6 @@ describe('Debt Flow Integration', () => {
   });
 
   it('uses Abono a capital terminology in prepayment section', async () => {
-    render(
-      <IntegrationWrapper>
-        <DebtPage />
-      </IntegrationWrapper>
-    );
-
-    await waitFor(
-      () => {
-        expect(screen.getByText(/Simulación de Abonos a Capital/i)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /Agregar abono a capital/i })).toBeInTheDocument();
-      },
-      { timeout: 3000 }
-    );
-  });
-
-  it('updates results when user changes loan amount', async () => {
     const user = userEvent.setup();
     render(
       <IntegrationWrapper>
@@ -100,23 +94,46 @@ describe('Debt Flow Integration', () => {
       </IntegrationWrapper>
     );
 
+    await user.click(screen.getByRole('button', { name: /calcular/i }));
+
     await waitFor(
       () => {
-        expect(screen.getByText(/Resumen de Resultados/i)).toBeInTheDocument();
+        expect(screen.getByText(/Simulación de Abonos a Capital/i)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /agregar abono a capital/i })).toBeInTheDocument();
       },
       { timeout: 3000 }
     );
+  });
 
-    const amountInput = screen.getByLabelText(/Monto del Préstamo/i);
-    await user.click(amountInput);
-    await user.keyboard('{Control}a');
-    await user.keyboard('300000');
+  it('updates results when user changes loan amount and recalculates', async () => {
+    const user = userEvent.setup();
+    render(
+      <IntegrationWrapper>
+        <DebtPage />
+      </IntegrationWrapper>
+    );
+
+    await user.click(screen.getByRole('button', { name: /calcular/i }));
 
     await waitFor(
       () => {
         expect(screen.getByText(/Resumen de Resultados/i)).toBeInTheDocument();
       },
-      { timeout: 2500 }
+      { timeout: 5000 }
+    );
+
+    const amountInput = screen.getByLabelText(/monto del préstamo/i);
+    await user.click(amountInput);
+    await user.clear(amountInput);
+    await user.type(amountInput, '300000');
+
+    await user.click(screen.getByRole('button', { name: /calcular/i }));
+
+    await waitFor(
+      () => {
+        expect(screen.getByText(/Resumen de Resultados/i)).toBeInTheDocument();
+      },
+      { timeout: 5000 }
     );
   });
 });

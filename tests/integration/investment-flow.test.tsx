@@ -8,6 +8,7 @@ import InvestmentPage from '@/app/investment/page';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
 import { ThemeModeProvider } from '@/theme/ThemeModeContext';
 import { useThemeMode } from '@/hooks/useThemeMode';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 
 jest.mock('next/navigation', () => ({
   usePathname: () => '/investment',
@@ -18,12 +19,16 @@ jest.mock('@mui/material', () => ({
   useMediaQuery: () => false,
 }));
 
+jest.mock('@/hooks/useIsMobile', () => ({ useIsMobile: () => false }));
+
 function IntegrationWrapper({ children }: { children: React.ReactNode }) {
   const themeMode = useThemeMode();
   const theme = createTheme({ palette: { mode: themeMode.mode } });
   return (
     <ThemeModeProvider value={themeMode}>
-      <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
+      <MuiThemeProvider theme={theme}>
+        <LanguageProvider>{children}</LanguageProvider>
+      </MuiThemeProvider>
     </ThemeModeProvider>
   );
 }
@@ -37,20 +42,18 @@ describe('Investment Flow Integration', () => {
       </IntegrationWrapper>
     );
 
-    expect(screen.getByText(/Simulador de Inversión/i)).toBeInTheDocument();
+    expect(screen.getAllByRole('heading', { name: /Simulador de Inversión/i }).length).toBeGreaterThan(0);
 
-    const calculateButton = screen.getByRole('button', {
-      name: /Calcular Proyección/i,
-    });
+    const calculateButton = screen.getByRole('button', { name: /calcular/i });
     await user.click(calculateButton);
 
     await waitFor(
       () => {
-        expect(screen.getByText(/Resultados de la Proyección/i)).toBeInTheDocument();
-        expect(screen.getByText(/Inversión Total/i)).toBeInTheDocument();
+        expect(screen.getByText(/Resumen de Resultados/i)).toBeInTheDocument();
+        expect(screen.getByText(/Total Invertido/i)).toBeInTheDocument();
         expect(screen.getByText(/Valor Final/i)).toBeInTheDocument();
       },
-      { timeout: 2000 }
+      { timeout: 3000 }
     );
   });
 
@@ -61,7 +64,8 @@ describe('Investment Flow Integration', () => {
       </IntegrationWrapper>
     );
 
-    expect(screen.getByText(/Ingresa los datos de tu inversión/i)).toBeInTheDocument();
+    expect(screen.getAllByRole('heading', { name: /Simulador de Inversión/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Proyecta el crecimiento de tu inversión/i).length).toBeGreaterThan(0);
   });
 
   it('shows results and breakdown after successful calculation', async () => {
@@ -72,17 +76,15 @@ describe('Investment Flow Integration', () => {
       </IntegrationWrapper>
     );
 
-    const calculateButton = screen.getByRole('button', {
-      name: /Calcular Proyección/i,
-    });
+    const calculateButton = screen.getByRole('button', { name: /calcular/i });
     await user.click(calculateButton);
 
     await waitFor(
       () => {
-        expect(screen.getByText(/Resultados de la Proyección/i)).toBeInTheDocument();
+        expect(screen.getByText(/Resumen de Resultados/i)).toBeInTheDocument();
         expect(screen.getByText(/Intereses Ganados/i)).toBeInTheDocument();
       },
-      { timeout: 2000 }
+      { timeout: 3000 }
     );
   });
 });

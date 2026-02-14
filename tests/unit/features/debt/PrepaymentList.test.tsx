@@ -2,10 +2,16 @@
  * Unit tests for PrepaymentList component
  */
 
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 import { PrepaymentList } from '@/features/debt/PrepaymentList';
 import type { Prepayment } from '@/domain/debt/debt.types';
+
+function renderWithLanguage(ui: React.ReactElement) {
+  return render(<LanguageProvider>{ui}</LanguageProvider>);
+}
 
 describe('PrepaymentList', () => {
   const mockPrepayments: Prepayment[] = [
@@ -31,12 +37,12 @@ describe('PrepaymentList', () => {
   });
 
   it('debe renderizar el título con el contador', () => {
-    render(<PrepaymentList {...defaultProps} />);
+    renderWithLanguage(<PrepaymentList {...defaultProps} />);
     expect(screen.getByText(/abonos a capital registrados \(2\)/i)).toBeInTheDocument();
   });
 
   it('debe mostrar todos los abonos', () => {
-    render(<PrepaymentList {...defaultProps} />);
+    renderWithLanguage(<PrepaymentList {...defaultProps} />);
 
     expect(screen.getByText(/abono en mes 12: \$5,000/i)).toBeInTheDocument();
     expect(screen.getByText(/reducir plazo/i)).toBeInTheDocument();
@@ -48,7 +54,7 @@ describe('PrepaymentList', () => {
   it('debe llamar onRemovePrepayment al hacer clic en eliminar', async () => {
     const user = userEvent.setup();
     const onRemovePrepayment = jest.fn();
-    render(<PrepaymentList {...defaultProps} onRemovePrepayment={onRemovePrepayment} />);
+    renderWithLanguage(<PrepaymentList {...defaultProps} onRemovePrepayment={onRemovePrepayment} />);
 
     const deleteButtons = screen.getAllByLabelText(/eliminar abono/i);
     await user.click(deleteButtons[0]);
@@ -57,7 +63,7 @@ describe('PrepaymentList', () => {
   });
 
   it('no debe mostrar nada cuando no hay abonos', () => {
-    const { container } = render(
+    const { container } = renderWithLanguage(
       <PrepaymentList prepayments={[]} onRemovePrepayment={jest.fn()} />
     );
     expect(container).toBeEmptyDOMElement();
@@ -72,7 +78,7 @@ describe('PrepaymentList', () => {
       },
     ];
 
-    render(<PrepaymentList prepayments={prepayments} onRemovePrepayment={jest.fn()} />);
+    renderWithLanguage(<PrepaymentList prepayments={prepayments} onRemovePrepayment={jest.fn()} />);
     expect(screen.getByText(/reducir plazo/i)).toBeInTheDocument();
     expect(screen.getByText(/reducir el plazo del préstamo/i)).toBeInTheDocument();
   });
@@ -86,13 +92,13 @@ describe('PrepaymentList', () => {
       },
     ];
 
-    render(<PrepaymentList prepayments={prepayments} onRemovePrepayment={jest.fn()} />);
+    renderWithLanguage(<PrepaymentList prepayments={prepayments} onRemovePrepayment={jest.fn()} />);
     expect(screen.getByText(/reducir cuota/i)).toBeInTheDocument();
     expect(screen.getByText(/reducir la cuota mensual/i)).toBeInTheDocument();
   });
 
   it('debe renderizar múltiples botones de eliminar', () => {
-    render(<PrepaymentList {...defaultProps} />);
+    renderWithLanguage(<PrepaymentList {...defaultProps} />);
     const deleteButtons = screen.getAllByLabelText(/eliminar abono/i);
     expect(deleteButtons).toHaveLength(2);
   });
@@ -106,7 +112,7 @@ describe('PrepaymentList', () => {
       },
     ];
 
-    render(<PrepaymentList prepayments={prepayments} onRemovePrepayment={jest.fn()} />);
+    renderWithLanguage(<PrepaymentList prepayments={prepayments} onRemovePrepayment={jest.fn()} />);
     expect(screen.getByText(/\$123,456\.78/i)).toBeInTheDocument();
   });
 });
