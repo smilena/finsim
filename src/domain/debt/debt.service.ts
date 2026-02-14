@@ -12,7 +12,13 @@ import {
   validatePrepayment,
 } from './prepayment.formulas';
 import { roundToCents } from '@/utils/math';
-import type { DebtInput, AmortizationSchedule, Prepayment, PrepaymentResult } from './debt.types';
+import type {
+  DebtInput,
+  AmortizationSchedule,
+  AmortizationPayment,
+  Prepayment,
+  PrepaymentResult,
+} from './debt.types';
 
 /**
  * Calculate complete amortization schedule for a loan

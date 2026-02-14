@@ -28,16 +28,16 @@ const translations = {
 // Helper function to get nested translation
 function getNestedTranslation(obj: Record<string, unknown>, path: string): string {
   const keys = path.split('.');
-  let result = obj;
-  
+  let result: unknown = obj;
+
   for (const key of keys) {
-    if (result && typeof result === 'object' && key in result) {
-      result = result[key];
+    if (result !== null && typeof result === 'object' && key in result) {
+      result = (result as Record<string, unknown>)[key];
     } else {
       return path; // Return key if not found
     }
   }
-  
+
   return typeof result === 'string' ? result : path;
 }
 
