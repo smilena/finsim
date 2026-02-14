@@ -2,10 +2,16 @@
  * Unit tests for PrepaymentForm component
  */
 
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 import { PrepaymentForm } from '@/features/debt/PrepaymentForm';
 import type { ValidationErrors } from '@/types/common.types';
+
+function renderWithLanguage(ui: React.ReactElement) {
+  return render(<LanguageProvider>{ui}</LanguageProvider>);
+}
 
 describe('PrepaymentForm', () => {
   const defaultProps = {
@@ -20,7 +26,7 @@ describe('PrepaymentForm', () => {
   });
 
   it('debe renderizar todos los campos del formulario', () => {
-    render(<PrepaymentForm {...defaultProps} />);
+    renderWithLanguage(<PrepaymentForm {...defaultProps} />);
 
     expect(screen.getByText(/estrategia de abono a capital/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/mes del abono/i)).toBeInTheDocument();
@@ -30,7 +36,7 @@ describe('PrepaymentForm', () => {
 
   it('debe permitir seleccionar una estrategia', async () => {
     const user = userEvent.setup();
-    render(<PrepaymentForm {...defaultProps} />);
+    renderWithLanguage(<PrepaymentForm {...defaultProps} />);
 
     const reducePaymentRadio = screen.getByRole('radio', { name: /reducir la cuota mensual/i });
     await user.click(reducePaymentRadio);
@@ -40,7 +46,7 @@ describe('PrepaymentForm', () => {
 
   it('debe permitir ingresar mes y monto', async () => {
     const user = userEvent.setup();
-    render(<PrepaymentForm {...defaultProps} />);
+    renderWithLanguage(<PrepaymentForm {...defaultProps} />);
 
     const monthInput = screen.getByLabelText(/mes del abono/i);
     const amountInput = screen.getByLabelText(/monto del abono/i);
@@ -57,7 +63,7 @@ describe('PrepaymentForm', () => {
   it('debe llamar onAddPrepayment con los valores correctos al enviar', async () => {
     const user = userEvent.setup();
     const onAddPrepayment = jest.fn();
-    render(<PrepaymentForm {...defaultProps} onAddPrepayment={onAddPrepayment} />);
+    renderWithLanguage(<PrepaymentForm {...defaultProps} onAddPrepayment={onAddPrepayment} />);
 
     // Ingresar mes
     const monthInput = screen.getByLabelText(/mes del abono/i);
@@ -83,9 +89,8 @@ describe('PrepaymentForm', () => {
   it('debe limpiar el formulario después de agregar', async () => {
     const user = userEvent.setup();
     const onAddPrepayment = jest.fn();
-    render(<PrepaymentForm {...defaultProps} onAddPrepayment={onAddPrepayment} />);
+    renderWithLanguage(<PrepaymentForm {...defaultProps} onAddPrepayment={onAddPrepayment} />);
 
-    // Llenar formulario
     const monthInput = screen.getByLabelText(/mes del abono/i);
     await user.clear(monthInput);
     await user.type(monthInput, '24');
@@ -94,13 +99,12 @@ describe('PrepaymentForm', () => {
     await user.clear(amountInput);
     await user.type(amountInput, '5000');
 
-    // Enviar
     const addButton = screen.getByRole('button', { name: /agregar abono a capital/i });
     await user.click(addButton);
 
-    // Verificar que se limpió (valores por defecto)
-    expect(monthInput).toHaveValue(12);
-    expect(amountInput).toHaveValue(10000);
+    // Tras el submit, el formulario se resetea a valores por defecto (mes 1, monto 1)
+    expect(screen.getByLabelText(/mes del abono/i)).toHaveValue(1);
+    expect(screen.getByLabelText(/monto del abono/i)).toHaveValue(1);
   });
 
   it('debe mostrar errores de validación', () => {
@@ -109,7 +113,7 @@ describe('PrepaymentForm', () => {
       amount: 'El monto debe ser mayor a 0',
     };
 
-    render(<PrepaymentForm {...defaultProps} errors={errors} />);
+    renderWithLanguage(<PrepaymentForm {...defaultProps} errors={errors} />);
 
     // Los errores se muestran en los helperText de NumberInput
     expect(screen.getByText(/el mes debe estar entre 1 y 360/i)).toBeInTheDocument();
@@ -119,7 +123,7 @@ describe('PrepaymentForm', () => {
   it('debe llamar onClearErrors al cambiar valores', async () => {
     const user = userEvent.setup();
     const onClearErrors = jest.fn();
-    render(<PrepaymentForm {...defaultProps} onClearErrors={onClearErrors} />);
+    renderWithLanguage(<PrepaymentForm {...defaultProps} onClearErrors={onClearErrors} />);
 
     const monthInput = screen.getByLabelText(/mes del abono/i);
     await user.clear(monthInput);
@@ -129,14 +133,14 @@ describe('PrepaymentForm', () => {
   });
 
   it('debe validar el mes máximo', () => {
-    render(<PrepaymentForm {...defaultProps} maxMonth={120} />);
+    renderWithLanguage(<PrepaymentForm {...defaultProps} maxMonth={120} />);
 
     const monthInput = screen.getByLabelText(/mes del abono/i);
     expect(monthInput).toHaveAttribute('max', '120');
   });
 
   it('debe mostrar ambas opciones de estrategia', () => {
-    render(<PrepaymentForm {...defaultProps} />);
+    renderWithLanguage(<PrepaymentForm {...defaultProps} />);
 
     expect(screen.getByRole('radio', { name: /reducir el plazo del préstamo/i })).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: /reducir la cuota mensual/i })).toBeInTheDocument();

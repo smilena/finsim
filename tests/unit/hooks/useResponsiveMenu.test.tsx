@@ -4,56 +4,45 @@
 
 import { renderHook, act } from '@testing-library/react';
 import { useResponsiveMenu } from '@/hooks/useResponsiveMenu';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { ReactNode } from 'react';
-
-// Mock useMediaQuery
-jest.mock('@mui/material', () => ({
-  ...jest.requireActual('@mui/material'),
-  useMediaQuery: jest.fn(),
+// useResponsiveMenu uses useIsMobile (window.innerWidth), not MUI useMediaQuery
+const mockIsMobile = jest.fn();
+jest.mock('@/hooks/useIsMobile', () => ({
+  useIsMobile: () => mockIsMobile(),
 }));
 
-import { useMediaQuery } from '@mui/material';
-
-const mockUseMediaQuery = useMediaQuery as jest.MockedFunction<typeof useMediaQuery>;
-
 describe('useResponsiveMenu', () => {
-  const wrapper = ({ children }: { children: ReactNode }) => (
-    <ThemeProvider theme={createTheme()}>{children}</ThemeProvider>
-  );
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('initializes with menu closed', () => {
-    mockUseMediaQuery.mockReturnValue(false);
+    mockIsMobile.mockReturnValue(false);
 
-    const { result } = renderHook(() => useResponsiveMenu(), { wrapper });
+    const { result } = renderHook(() => useResponsiveMenu());
 
     expect(result.current.isOpen).toBe(false);
   });
 
   it('detects mobile viewport', () => {
-    mockUseMediaQuery.mockReturnValue(true);
+    mockIsMobile.mockReturnValue(true);
 
-    const { result } = renderHook(() => useResponsiveMenu(), { wrapper });
+    const { result } = renderHook(() => useResponsiveMenu());
 
     expect(result.current.isMobile).toBe(true);
   });
 
   it('detects desktop viewport', () => {
-    mockUseMediaQuery.mockReturnValue(false);
+    mockIsMobile.mockReturnValue(false);
 
-    const { result } = renderHook(() => useResponsiveMenu(), { wrapper });
+    const { result } = renderHook(() => useResponsiveMenu());
 
     expect(result.current.isMobile).toBe(false);
   });
 
   it('opens menu', () => {
-    mockUseMediaQuery.mockReturnValue(true);
+    mockIsMobile.mockReturnValue(true);
 
-    const { result } = renderHook(() => useResponsiveMenu(), { wrapper });
+    const { result } = renderHook(() => useResponsiveMenu());
 
     act(() => {
       result.current.openMenu();
@@ -63,9 +52,9 @@ describe('useResponsiveMenu', () => {
   });
 
   it('closes menu', () => {
-    mockUseMediaQuery.mockReturnValue(true);
+    mockIsMobile.mockReturnValue(true);
 
-    const { result } = renderHook(() => useResponsiveMenu(), { wrapper });
+    const { result } = renderHook(() => useResponsiveMenu());
 
     act(() => {
       result.current.openMenu();
@@ -81,9 +70,9 @@ describe('useResponsiveMenu', () => {
   });
 
   it('toggles menu', () => {
-    mockUseMediaQuery.mockReturnValue(true);
+    mockIsMobile.mockReturnValue(true);
 
-    const { result } = renderHook(() => useResponsiveMenu(), { wrapper });
+    const { result } = renderHook(() => useResponsiveMenu());
 
     expect(result.current.isOpen).toBe(false);
 
@@ -101,10 +90,9 @@ describe('useResponsiveMenu', () => {
   });
 
   it('auto-closes menu when switching from mobile to desktop', () => {
-    // Start as mobile with menu open
-    mockUseMediaQuery.mockReturnValue(true);
+    mockIsMobile.mockReturnValue(true);
 
-    const { result, rerender } = renderHook(() => useResponsiveMenu(), { wrapper });
+    const { result, rerender } = renderHook(() => useResponsiveMenu());
 
     act(() => {
       result.current.openMenu();
@@ -112,8 +100,7 @@ describe('useResponsiveMenu', () => {
 
     expect(result.current.isOpen).toBe(true);
 
-    // Switch to desktop
-    mockUseMediaQuery.mockReturnValue(false);
+    mockIsMobile.mockReturnValue(false);
     rerender();
 
     expect(result.current.isOpen).toBe(false);

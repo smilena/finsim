@@ -44,3 +44,10 @@ const localStorageMock = {
   clear: jest.fn(),
 };
 global.localStorage = localStorageMock as any;
+
+// Mock ResizeObserver (no existe en JSDOM)
+global.ResizeObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+}));

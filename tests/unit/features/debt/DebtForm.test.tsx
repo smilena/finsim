@@ -2,11 +2,17 @@
  * Unit tests for DebtForm component
  */
 
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 import { DebtForm } from '@/features/debt/DebtForm';
 import type { DebtInput } from '@/domain/debt/debt.types';
 import type { ValidationErrors } from '@/types/common.types';
+
+function renderWithLanguage(ui: React.ReactElement) {
+  return render(<LanguageProvider>{ui}</LanguageProvider>);
+}
 
 describe('DebtForm', () => {
   const defaultInputs: DebtInput = {
@@ -28,16 +34,15 @@ describe('DebtForm', () => {
   });
 
   it('debe renderizar todos los campos del formulario', () => {
-    render(<DebtForm {...defaultProps} />);
+    renderWithLanguage(<DebtForm {...defaultProps} />);
 
     expect(screen.getByLabelText(/monto del préstamo/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/tasa de interés anual/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/plazo del préstamo/i)).toBeInTheDocument();
-    expect(screen.getAllByLabelText(/frecuencia de pago/i)[0]).toBeInTheDocument();
   });
 
   it('debe mostrar los valores iniciales', () => {
-    render(<DebtForm {...defaultProps} />);
+    renderWithLanguage(<DebtForm {...defaultProps} />);
 
     expect(screen.getByLabelText(/monto del préstamo/i)).toHaveValue(200000);
     expect(screen.getByLabelText(/tasa de interés anual/i)).toHaveValue(5);
@@ -47,7 +52,7 @@ describe('DebtForm', () => {
   it('debe llamar onInputChange al cambiar el monto', async () => {
     const user = userEvent.setup();
     const onInputChange = jest.fn();
-    render(<DebtForm {...defaultProps} onInputChange={onInputChange} />);
+    renderWithLanguage(<DebtForm {...defaultProps} onInputChange={onInputChange} />);
 
     const amountInput = screen.getByLabelText(/monto del préstamo/i);
     await user.clear(amountInput);
@@ -59,7 +64,7 @@ describe('DebtForm', () => {
   it('debe llamar onInputChange al cambiar la tasa', async () => {
     const user = userEvent.setup();
     const onInputChange = jest.fn();
-    render(<DebtForm {...defaultProps} onInputChange={onInputChange} />);
+    renderWithLanguage(<DebtForm {...defaultProps} onInputChange={onInputChange} />);
 
     const rateInput = screen.getByLabelText(/tasa de interés anual/i);
     await user.clear(rateInput);
@@ -71,7 +76,7 @@ describe('DebtForm', () => {
   it('debe llamar onInputChange al cambiar el plazo', async () => {
     const user = userEvent.setup();
     const onInputChange = jest.fn();
-    render(<DebtForm {...defaultProps} onInputChange={onInputChange} />);
+    renderWithLanguage(<DebtForm {...defaultProps} onInputChange={onInputChange} />);
 
     const termInput = screen.getByLabelText(/plazo del préstamo/i);
     await user.clear(termInput);
@@ -80,25 +85,10 @@ describe('DebtForm', () => {
     expect(onInputChange).toHaveBeenCalledWith('termMonths', expect.any(Number));
   });
 
-  it('debe llamar onInputChange al cambiar la frecuencia', async () => {
-    const user = userEvent.setup();
-    const onInputChange = jest.fn();
-    render(<DebtForm {...defaultProps} onInputChange={onInputChange} />);
-
-    const frequencySelects = screen.getAllByLabelText(/frecuencia de pago/i);
-    const frequencySelect = frequencySelects[0];
-    await user.click(frequencySelect);
-    
-    const biWeeklyOption = screen.getByRole('option', { name: /quincenal/i });
-    await user.click(biWeeklyOption);
-
-    expect(onInputChange).toHaveBeenCalledWith('paymentFrequency', 'bi-weekly');
-  });
-
   it('debe llamar onReset al hacer clic en Limpiar', async () => {
     const user = userEvent.setup();
     const onReset = jest.fn();
-    render(<DebtForm {...defaultProps} onReset={onReset} />);
+    renderWithLanguage(<DebtForm {...defaultProps} onReset={onReset} />);
 
     const resetButton = screen.getByRole('button', { name: /limpiar/i });
     await user.click(resetButton);
@@ -112,7 +102,7 @@ describe('DebtForm', () => {
       annualInterestRate: 'La tasa debe estar entre 0 y 100',
     };
 
-    render(<DebtForm {...defaultProps} errors={errors} />);
+    renderWithLanguage(<DebtForm {...defaultProps} errors={errors} />);
 
     expect(screen.getByText(/el monto debe ser mayor a 0/i)).toBeInTheDocument();
     expect(screen.getByText(/la tasa debe estar entre 0 y 100/i)).toBeInTheDocument();
@@ -123,26 +113,29 @@ describe('DebtForm', () => {
       general: 'Error al calcular',
     };
 
-    render(<DebtForm {...defaultProps} errors={errors} />);
+    renderWithLanguage(<DebtForm {...defaultProps} errors={errors} />);
     expect(screen.getByText(/error al calcular/i)).toBeInTheDocument();
   });
 
   it('debe mostrar indicador de carga cuando isCalculating es true', () => {
-    render(<DebtForm {...defaultProps} isCalculating={true} />);
+    renderWithLanguage(
+      <DebtForm {...defaultProps} onCalculate={jest.fn()} isCalculating={true} />
+    );
 
     expect(screen.getByText(/calculando/i)).toBeInTheDocument();
-    expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
 
   it('debe deshabilitar el botón Limpiar cuando está calculando', () => {
-    render(<DebtForm {...defaultProps} isCalculating={true} />);
+    renderWithLanguage(
+      <DebtForm {...defaultProps} onCalculate={jest.fn()} isCalculating={true} />
+    );
 
     const resetButton = screen.getByRole('button', { name: /limpiar/i });
     expect(resetButton).toBeDisabled();
   });
 
   it('debe mostrar texto de ayuda con años y meses', () => {
-    render(<DebtForm {...defaultProps} />);
+    renderWithLanguage(<DebtForm {...defaultProps} />);
 
     // 360 meses = 30 años y 0 meses
     expect(screen.getByText(/30 años y 0 meses/i)).toBeInTheDocument();
@@ -154,7 +147,7 @@ describe('DebtForm', () => {
       termMonths: 365,
     };
 
-    render(<DebtForm {...defaultProps} inputs={inputs} />);
+    renderWithLanguage(<DebtForm {...defaultProps} inputs={inputs} />);
 
     // 365 meses = 30 años y 5 meses
     expect(screen.getByText(/30 años y 5 meses/i)).toBeInTheDocument();

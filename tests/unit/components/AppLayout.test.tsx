@@ -5,17 +5,20 @@
 import { render, screen } from '@testing-library/react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 
-// Mock AppHeader to avoid complex dependencies
-jest.mock('@/components/layout/AppHeader', () => ({
-  AppHeader: () => <header data-testid="app-header">Header</header>,
-}));
+// AppLayout uses useIsMobile for responsive menu
+jest.mock('@/hooks/useIsMobile', () => ({ useIsMobile: () => false }));
 
 const theme = createTheme();
 
 describe('AppLayout', () => {
   const renderWithTheme = (ui: React.ReactElement) => {
-    return render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
+    return render(
+      <ThemeProvider theme={theme}>
+        <LanguageProvider>{ui}</LanguageProvider>
+      </ThemeProvider>
+    );
   };
 
   it('renders children content', () => {
@@ -29,14 +32,15 @@ describe('AppLayout', () => {
     expect(screen.getByText('Test Content')).toBeInTheDocument();
   });
 
-  it('includes AppHeader component', () => {
+  it('includes sidebar and main content area', () => {
     renderWithTheme(
       <AppLayout>
         <div>Content</div>
       </AppLayout>
     );
 
-    expect(screen.getByTestId('app-header')).toBeInTheDocument();
+    expect(screen.getByRole('main')).toBeInTheDocument();
+    expect(screen.getByLabelText(/sidebar/i)).toBeInTheDocument();
   });
 
   it('wraps content in main element with proper role', () => {
