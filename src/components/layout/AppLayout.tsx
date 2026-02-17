@@ -70,21 +70,21 @@ export function AppLayout({ children }: AppLayoutProps) {
 
       {/* Mobile: header with hamburger to open sidebar sheet */}
       {isMobile && (
-        <header className="fixed top-0 left-0 right-0 z-50 flex h-14 min-w-0 items-center gap-2 border-b border-border bg-surface px-3 md:hidden min-[400px]:px-4">
+        <header className="fixed top-0 left-0 right-0 z-50 flex h-14 min-w-0 items-center gap-1 border-b border-border bg-surface px-2 md:hidden min-[400px]:px-3">
           <Button
             variant="ghost"
             size="icon"
             onClick={toggleMenu}
             aria-label={t('nav.openMenu')}
             aria-expanded={isOpen}
-            className="shrink-0"
+            className="h-9 w-9 shrink-0"
           >
-            <Menu className="h-6 w-6" />
+            <Menu className="h-5 w-5" />
           </Button>
-          <h1 className="ml-1 min-w-0 flex-1 truncate text-base font-semibold text-foreground sm:ml-2 sm:text-lg">
+          <h1 className="min-w-0 flex-1 truncate pl-0.5 text-base font-semibold text-foreground sm:text-lg">
             {t('nav.appTitle')}
           </h1>
-          <div className="flex shrink-0 items-center gap-0">
+          <div className="flex shrink-0 items-center gap-0.5">
             <LanguageSelector />
             <ThemeToggle mode={mode} onToggle={toggleTheme} />
           </div>

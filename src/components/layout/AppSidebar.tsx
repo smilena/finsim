@@ -69,9 +69,9 @@ export function AppSidebar({
       {/* Header: logo + arrow toggle (when onLogoClick provided) */}
       <div
         className={cn(
-          'flex items-center justify-between gap-2 border-b border-border',
-          compact ? 'px-4 py-4 pr-12 pt-14' : 'px-4 py-5',
-          collapsed && !compact && 'justify-center px-2 py-5'
+          'flex min-w-0 items-center border-b border-border',
+          compact ? 'justify-start gap-2 px-3 py-4 pt-14' : 'justify-between gap-2 px-4 py-5',
+          collapsed && !compact && 'justify-start gap-1 px-1.5 py-4'
         )}
       >
         {onLogoClick ? (
@@ -79,13 +79,14 @@ export function AppSidebar({
             variant="ghost"
             className={cn(
               'h-auto shrink-0 p-0 text-primary font-semibold hover:bg-transparent',
-              collapsed && !compact ? 'gap-0' : 'gap-2'
+              collapsed && !compact ? 'gap-0 min-w-0' : 'gap-2',
+              compact && 'gap-0'
             )}
             aria-label={t('nav.appTitle')}
             onClick={onLogoClick}
           >
-            <LineChart className="h-9 w-9 shrink-0" />
-            {!collapsed && (
+            <LineChart className={cn('shrink-0', collapsed && !compact ? 'h-7 w-7' : 'h-9 w-9')} />
+            {!compact && !collapsed && (
               <>
                 <Coins className="h-9 w-9 shrink-0" />
                 <span className="text-lg tracking-tight">{t('nav.brandName')}</span>
@@ -97,13 +98,14 @@ export function AppSidebar({
             href={ROUTES.HOME}
             className={cn(
               'flex items-center text-primary font-semibold',
-              collapsed && !compact ? 'gap-0' : 'gap-2'
+              collapsed && !compact ? 'gap-0 min-w-0' : 'gap-2',
+              compact && 'gap-0'
             )}
             aria-label={t('nav.appTitle')}
             onClick={onClose}
           >
-            <LineChart className="h-9 w-9 shrink-0" />
-            {!collapsed && (
+            <LineChart className={cn('shrink-0', collapsed && !compact ? 'h-7 w-7' : 'h-9 w-9')} />
+            {!compact && !collapsed && (
               <>
                 <Coins className="h-9 w-9 shrink-0" />
                 <span className="text-lg tracking-tight">{t('nav.brandName')}</span>
@@ -116,13 +118,13 @@ export function AppSidebar({
             variant="ghost"
             size="icon"
             onClick={onLogoClick}
-            className="shrink-0"
+            className={cn('shrink-0', collapsed && !compact && 'h-8 w-8')}
             aria-label={collapsed && !compact ? t('nav.expandMenu') : t('nav.collapseMenu')}
           >
             {compact ? (
               <ChevronLeft className="h-5 w-5" />
             ) : collapsed ? (
-              <ChevronRight className="h-5 w-5" />
+              <ChevronRight className="h-4 w-4 shrink-0" />
             ) : (
               <ChevronLeft className="h-5 w-5" />
             )}
