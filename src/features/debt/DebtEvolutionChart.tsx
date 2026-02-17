@@ -15,8 +15,9 @@ import {
   Legend,
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CHART_COLORS } from '@/lib/chart-config';
+import { useChartColors } from '@/hooks/useChartColors';
 import { formatCurrency } from '@/utils/money';
+import { useLanguage } from '@/contexts/LanguageContext';
 import type { AmortizationPayment } from '@/domain/debt/debt.types';
 
 export interface DebtEvolutionChartProps {
@@ -50,6 +51,8 @@ export function DebtEvolutionChart({
   prepaymentSchedule,
   showComparison = true,
 }: DebtEvolutionChartProps) {
+  const { t } = useLanguage();
+  const colors = useChartColors();
   // Prepare chart data
   const data: ChartDataPoint[] = baseSchedule.map((payment, index) => ({
     month: payment.paymentNumber,
@@ -69,8 +72,8 @@ export function DebtEvolutionChart({
   }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-surface border border-border rounded-lg p-3 shadow-lg">
-          <p className="text-sm font-medium text-foreground mb-2">Mes {label}</p>
+        <div className="rounded-lg border border-border bg-surface p-3 shadow-lg">
+          <p className="text-sm font-medium text-foreground mb-2">{t('common.month')} {label}</p>
           {payload.map((entry, index: number) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
               {entry.name}: {formatCurrency(entry.value)}
@@ -83,33 +86,34 @@ export function DebtEvolutionChart({
   };
 
   return (
-    <Card>
+    <Card className="min-w-0">
       <CardHeader>
-        <CardTitle>Evolución del Saldo de la Deuda</CardTitle>
+        <CardTitle>{t('debt.chart.evolution')}</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={350}>
+        <div className="min-w-0 w-full" style={{ height: 350 }}>
+        <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <defs>
-              <linearGradient id="colorWithout" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={CHART_COLORS.debtWithoutPrepayment} stopOpacity={0.3} />
-                <stop offset="95%" stopColor={CHART_COLORS.debtWithoutPrepayment} stopOpacity={0} />
+              <linearGradient id="colorWithout-debt-evol" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={colors.debtWithoutPrepayment} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={colors.debtWithoutPrepayment} stopOpacity={0} />
               </linearGradient>
-              <linearGradient id="colorWith" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={CHART_COLORS.debtWithPrepayment} stopOpacity={0.6} />
-                <stop offset="95%" stopColor={CHART_COLORS.debtWithPrepayment} stopOpacity={0} />
+              <linearGradient id="colorWith-debt-evol" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={colors.debtWithPrepayment} stopOpacity={0.6} />
+                <stop offset="95%" stopColor={colors.debtWithPrepayment} stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
+            <CartesianGrid strokeDasharray="3 3" stroke={colors.grid} />
             <XAxis
               dataKey="month"
-              stroke={CHART_COLORS.text}
-              tick={{ fill: CHART_COLORS.text }}
-              label={{ value: 'Mes', position: 'insideBottom', offset: -5, fill: CHART_COLORS.text }}
+              stroke={colors.text}
+              tick={{ fill: colors.text }}
+              label={{ value: t('common.month'), position: 'insideBottom', offset: -5, fill: colors.text }}
             />
             <YAxis
-              stroke={CHART_COLORS.text}
-              tick={{ fill: CHART_COLORS.text }}
+              stroke={colors.text}
+              tick={{ fill: colors.text }}
               tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
             />
             <Tooltip content={<CustomTooltip />} />
@@ -120,23 +124,24 @@ export function DebtEvolutionChart({
             <Area
               type="monotone"
               dataKey="withoutPrepayment"
-              name="Sin Abonos"
-              stroke={CHART_COLORS.debtWithoutPrepayment}
+              name={t('debt.chart.withoutPrepayment')}
+              stroke={colors.debtWithoutPrepayment}
               fillOpacity={1}
-              fill="url(#colorWithout)"
+              fill="url(#colorWithout-debt-evol)"
             />
             {showComparison && (
               <Area
                 type="monotone"
                 dataKey="withPrepayment"
-                name="Con Abonos"
-                stroke={CHART_COLORS.debtWithPrepayment}
+                name={t('debt.chart.withPrepayment')}
+                stroke={colors.debtWithPrepayment}
                 fillOpacity={1}
-                fill="url(#colorWith)"
+                fill="url(#colorWith-debt-evol)"
               />
             )}
           </AreaChart>
         </ResponsiveContainer>
+        </div>
       </CardContent>
     </Card>
   );

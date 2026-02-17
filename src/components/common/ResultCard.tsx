@@ -69,8 +69,21 @@ export function ResultCard({
     }
   };
 
+  const getVariantGradient = () => {
+    switch (variant) {
+      case 'success':
+        return 'from-surface to-success/10';
+      case 'warning':
+        return 'from-surface to-warning/10';
+      case 'info':
+        return 'from-surface to-info/10';
+      default:
+        return 'from-surface to-primary/10';
+    }
+  };
+
   return (
-    <Card className={cn(elevation === 0 && 'shadow-none', elevation > 1 && 'shadow-md')}>
+    <Card className={cn('min-w-0 bg-gradient-to-br', getVariantGradient(), elevation === 0 && 'shadow-none', elevation > 1 && 'shadow-md')}>
       <CardContent className="pt-6">
         {icon && <div className="flex items-center mb-2">{icon}</div>}
         <p className="text-sm text-foreground-secondary mb-1">{title}</p>

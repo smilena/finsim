@@ -1,11 +1,10 @@
 /**
- * Hook to manage theme mode (light/dark) with localStorage persistence
+ * Hook to manage theme mode (light/dark) - state lives in ThemeProvider, no persistence
  */
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { THEME_STORAGE_KEY } from '@/types/common.types';
+import { useState, useCallback } from 'react';
 import type { ThemeMode } from '@/types/common.types';
 import { isThemeMode } from '@/types/common.types';
 
@@ -27,44 +26,20 @@ export interface UseThemeModeReturn {
 }
 
 /**
- * Hook to manage theme mode with localStorage persistence
- *
- * - Read theme preference from localStorage on mount
- * - Persist theme preference to localStorage on change
- * - localStorage key: 'finanzas-theme-mode'
+ * Hook to manage theme mode - state is held by the provider (ThemeProvider).
+ * Does not persist; theme resets on page reload.
  */
 export function useThemeMode(): UseThemeModeReturn {
   const [mode, setModeState] = useState<ThemeMode>('light');
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted || typeof window === 'undefined') return;
-
-    const stored = localStorage.getItem(THEME_STORAGE_KEY);
-    if (stored && isThemeMode(stored)) {
-      setModeState(stored);
-    }
-  }, [mounted]);
 
   const setTheme = useCallback((newMode: ThemeMode) => {
-    setModeState(newMode);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(THEME_STORAGE_KEY, newMode);
+    if (isThemeMode(newMode)) {
+      setModeState(newMode);
     }
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setModeState((prev) => {
-      const next: ThemeMode = prev === 'light' ? 'dark' : 'light';
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(THEME_STORAGE_KEY, next);
-      }
-      return next;
-    });
+    setModeState((prev) => (prev === 'light' ? 'dark' : 'light'));
   }, []);
 
   return { mode, toggleTheme, setTheme };

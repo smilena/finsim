@@ -2,7 +2,7 @@
  * Unit tests for SelectField component
  */
 
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { SelectField } from '@/components/common/SelectField';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 

@@ -1,5 +1,5 @@
 /**
- * Theme provider with light/dark mode support and localStorage persistence
+ * Theme provider with light/dark mode support (state in memory, no persistence)
  */
 
 'use client';
@@ -12,6 +12,7 @@ import { useThemeMode } from '@/hooks/useThemeMode';
 import { ThemeModeProvider } from './ThemeModeContext';
 import { lightTheme } from './lightTheme';
 import { darkTheme } from './darkTheme';
+import { ThemeSync } from '@/components/theme/ThemeSync';
 
 export interface ThemeProviderProps {
   children: React.ReactNode;
@@ -19,8 +20,7 @@ export interface ThemeProviderProps {
 
 /**
  * Application theme provider
- * - Supports light and dark modes
- * - Persists preference to localStorage
+ * - Supports light and dark modes; state lives in this provider (no localStorage)
  * - Wraps MUI theme with Next.js App Router cache
  */
 export function ThemeProvider({ children }: ThemeProviderProps) {
@@ -32,6 +32,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
       <ThemeModeProvider value={themeMode}>
         <MuiThemeProvider theme={theme}>
           <CssBaseline />
+          <ThemeSync />
           {children}
         </MuiThemeProvider>
       </ThemeModeProvider>

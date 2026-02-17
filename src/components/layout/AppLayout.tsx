@@ -4,10 +4,13 @@
 
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useResponsiveMenu } from '@/hooks/useResponsiveMenu';
+import { useThemeModeContext } from '@/theme/ThemeModeContext';
 import { AppSidebar } from './AppSidebar';
+import { LanguageSelector } from './LanguageSelector';
+import { ThemeToggle } from './ThemeToggle';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
@@ -22,17 +25,23 @@ export interface AppLayoutProps {
 
 /**
  * Main application layout
- * - Desktop: fixed sidebar left, content right
- * - Mobile: hamburger opens sidebar as sheet overlay
+ * - Desktop: sidebar visible, logo toggles collapse
+ * - Mobile: sidebar hidden, header with hamburger opens sheet
  * - Skip link for keyboard accessibility
- * - Gradient background
  */
+const SIDEBAR_WIDTH_EXPANDED = 'w-56';
+const SIDEBAR_WIDTH_COLLAPSED = 'w-16';
+const MAIN_PL_EXPANDED = 'md:pl-56';
+const MAIN_PL_COLLAPSED = 'md:pl-16';
+
 export function AppLayout({ children }: AppLayoutProps) {
   const { t } = useLanguage();
   const { isMobile, isOpen, toggleMenu, closeMenu } = useResponsiveMenu();
+  const { mode, toggleTheme } = useThemeModeContext();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-[#080810] via-[#0f0f1a] to-[#0a0a14]">
+    <div className="flex min-h-screen min-w-0 bg-gradient-to-br from-background via-surface to-background">
       {/* Skip to main content - accessibility for keyboard users */}
       <a
         href="#main-content"
@@ -44,39 +53,61 @@ export function AppLayout({ children }: AppLayoutProps) {
         {t('nav.skipToContent')}
       </a>
 
-      {/* Desktop: fixed sidebar */}
+      {/* Desktop: fixed sidebar; hidden on mobile */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-40 hidden border-r border-border bg-surface md:block',
-          'w-56'
+          'fixed inset-y-0 left-0 z-40 hidden border-r border-border bg-surface transition-[width] duration-200 md:block',
+          sidebarCollapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH_EXPANDED
         )}
         aria-label="Sidebar"
       >
-        <AppSidebar />
+        <AppSidebar
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={() => setSidebarCollapsed((p) => !p)}
+          onLogoClick={() => setSidebarCollapsed((p) => !p)}
+        />
       </aside>
 
-      {/* Mobile: hamburger header */}
+      {/* Mobile: header with hamburger to open sidebar sheet */}
       {isMobile && (
-        <header className="fixed top-0 left-0 right-0 z-50 flex h-14 items-center border-b border-border bg-surface px-4 md:hidden">
+        <header className="fixed top-0 left-0 right-0 z-50 flex h-14 min-w-0 items-center gap-2 border-b border-border bg-surface px-3 md:hidden min-[400px]:px-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={toggleMenu}
             aria-label={t('nav.openMenu')}
             aria-expanded={isOpen}
+            className="shrink-0"
           >
             <Menu className="h-6 w-6" />
           </Button>
-          <h1 className="ml-3 text-lg font-semibold text-foreground">
+          <h1 className="ml-1 min-w-0 flex-1 truncate text-base font-semibold text-foreground sm:ml-2 sm:text-lg">
             {t('nav.appTitle')}
           </h1>
+          <div className="flex shrink-0 items-center gap-0">
+            <LanguageSelector />
+            <ThemeToggle mode={mode} onToggle={toggleTheme} />
+          </div>
         </header>
       )}
 
-      {/* Mobile: sidebar as sheet overlay */}
+      {/* Mobile: full sidebar as sheet overlay when hamburger is clicked */}
       <Sheet open={isOpen} onOpenChange={(open) => !open && closeMenu()}>
-        <SheetContent side="left" className="w-72 border-border bg-surface p-0">
-          <AppSidebar onClose={closeMenu} compact />
+        <SheetContent
+          side="left"
+          hideCloseButton
+          className={cn(
+            'border-border bg-surface p-0 transition-[width] duration-200',
+            sidebarCollapsed ? 'w-20' : 'w-72'
+          )}
+        >
+          <AppSidebar
+            onClose={closeMenu}
+            compact
+            collapsed={sidebarCollapsed}
+            onToggleCollapse={() => setSidebarCollapsed((p) => !p)}
+            onLogoClick={closeMenu}
+          />
         </SheetContent>
       </Sheet>
 
@@ -85,12 +116,11 @@ export function AppLayout({ children }: AppLayoutProps) {
         id="main-content"
         tabIndex={-1}
         className={cn(
-          'flex-1 py-6',
-          isMobile ? 'pt-20' : '',
-          'md:pl-56'
+          'flex-1 min-w-0 py-6 transition-[padding] duration-200',
+          isMobile ? 'pt-20 pl-0' : sidebarCollapsed ? MAIN_PL_COLLAPSED : MAIN_PL_EXPANDED
         )}
       >
-        <div className="container mx-auto max-w-6xl px-4">{children}</div>
+        <div className="container mx-auto min-w-0 max-w-full overflow-x-hidden px-3 min-[400px]:px-4 sm:max-w-6xl">{children}</div>
       </main>
     </div>
   );

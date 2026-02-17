@@ -15,8 +15,8 @@ export default function HomePage() {
 
   return (
     <AppLayout>
-      <div className="text-center mb-12 mt-8">
-        <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+      <div className="min-w-0 max-w-full text-center mb-12 mt-8">
+        <h1 className="text-3xl font-bold text-foreground mb-4 sm:text-4xl md:text-5xl">
           {t('home.title')}
         </h1>
         <p className="text-xl text-foreground-secondary max-w-3xl mx-auto mt-4">
@@ -24,7 +24,7 @@ export default function HomePage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+      <div className="grid min-w-0 grid-cols-1 gap-8 mt-8 md:grid-cols-2">
         <Link href="/investment" className="group">
           <Card className="h-full transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
             <CardContent className="p-6">

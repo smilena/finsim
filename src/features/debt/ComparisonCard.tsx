@@ -17,7 +17,7 @@ export function ComparisonCard({ results }: ComparisonCardProps) {
   const { t } = useLanguage();
   
   return (
-    <Card>
+    <Card className="min-w-0 bg-gradient-to-br from-surface via-surface to-success/10">
       <CardContent className="p-6">
         <h3 className="text-xl font-semibold text-foreground mb-6">
           {t('debt.comparison.title')}

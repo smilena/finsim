@@ -11,6 +11,8 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { DebtForm } from '@/features/debt/DebtForm';
 import { DebtResults } from '@/features/debt/DebtResults';
 import { AmortizationTable } from '@/features/debt/AmortizationTable';
+import { DebtEvolutionChart } from '@/features/debt/DebtEvolutionChart';
+import { InterestSavingsChart } from '@/features/debt/InterestSavingsChart';
 import { PrepaymentForm } from '@/features/debt/PrepaymentForm';
 import { PrepaymentList } from '@/features/debt/PrepaymentList';
 import { ComparisonCard } from '@/features/debt/ComparisonCard';
@@ -46,8 +48,8 @@ export default function DebtPage() {
 
   return (
     <AppLayout>
-      <div>
-        <h1 className="text-4xl font-bold text-foreground mb-2">
+      <div className="min-w-0 max-w-full">
+        <h1 className="text-3xl font-bold text-foreground mb-2 sm:text-4xl">
           {t('debt.title')}
         </h1>
         <p className="text-base text-foreground-secondary mb-8">
@@ -97,6 +99,20 @@ export default function DebtPage() {
               {/* Current Results */}
               <div className="mb-8">
                 <DebtResults results={results} />
+              </div>
+
+              {/* Charts - before tables */}
+              <div className="mb-8 min-w-0 space-y-8">
+                <DebtEvolutionChart
+                  baseSchedule={results.baseScenario.schedule}
+                  prepaymentSchedule={results.prepaymentScenario.schedule}
+                  showComparison={prepayments.length > 0}
+                />
+                <InterestSavingsChart
+                  baseSchedule={results.baseScenario.schedule}
+                  prepaymentSchedule={results.prepaymentScenario.schedule}
+                  showComparison={prepayments.length > 0}
+                />
               </div>
 
               {/* Prepayment Form */}

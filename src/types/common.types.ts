@@ -8,11 +8,6 @@
 export type ThemeMode = 'light' | 'dark';
 
 /**
- * localStorage key for theme preference
- */
-export const THEME_STORAGE_KEY = 'finanzas-theme-mode';
-
-/**
  * Navigation menu item
  */
 export interface MenuItem {
@@ -44,7 +39,6 @@ export const ROUTES = {
   HOME: '/',
   INVESTMENT: '/investment',
   DEBT: '/debt',
-  SETTINGS: '/settings',
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;

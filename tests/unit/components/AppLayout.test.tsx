@@ -6,17 +6,26 @@ import { render, screen } from '@testing-library/react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { LanguageProvider } from '@/contexts/LanguageContext';
+import { ThemeModeProvider } from '@/theme/ThemeModeContext';
 
 // AppLayout uses useIsMobile for responsive menu
 jest.mock('@/hooks/useIsMobile', () => ({ useIsMobile: () => false }));
 
 const theme = createTheme();
 
+const themeModeValue = {
+  mode: 'light' as const,
+  toggleTheme: () => {},
+  setTheme: () => {},
+};
+
 describe('AppLayout', () => {
   const renderWithTheme = (ui: React.ReactElement) => {
     return render(
       <ThemeProvider theme={theme}>
-        <LanguageProvider>{ui}</LanguageProvider>
+        <LanguageProvider>
+          <ThemeModeProvider value={themeModeValue}>{ui}</ThemeModeProvider>
+        </LanguageProvider>
       </ThemeProvider>
     );
   };

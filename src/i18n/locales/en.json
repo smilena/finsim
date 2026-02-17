@@ -26,12 +26,17 @@
     "language": "Language",
     "skipToContent": "Skip to main content",
     "selectLanguage": "Select language",
-    "openMenu": "Open navigation menu"
+    "openMenu": "Open navigation menu",
+    "expandMenu": "Expand menu",
+    "collapseMenu": "Collapse menu"
   },
   "settings": {
     "title": "Settings",
     "subtitle": "Configure language and other app preferences.",
-    "languageLabel": "Language"
+    "languageLabel": "Language",
+    "themeLabel": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark"
   },
   "home": {
     "title": "Welcome to Financial Simulators",
@@ -77,6 +82,12 @@
       "reducePaymentShort": "Reduce Payment",
       "monthHelper": "Must be between month 1 and {{max}}"
     },
+    "chart": {
+      "evolution": "Debt Balance Evolution",
+      "interestSavings": "Cumulative Interest",
+      "withoutPrepayment": "Without Prepayments",
+      "withPrepayment": "With Prepayments"
+    },
     "comparison": {
       "title": "Scenario Comparison",
       "strategy": "Strategy",
@@ -118,6 +129,9 @@
     "period": "Period",
     "invested": "Invested",
     "interest": "Interest",
-    "balance": "Balance"
+    "balance": "Balance",
+    "chart": {
+      "profitability": "Profitability Over Time"
+    }
   }
 }

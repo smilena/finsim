@@ -30,7 +30,6 @@ import type { AmortizationPayment } from '@/domain/debt/debt.types';
 export interface AmortizationTableProps {
   schedule: AmortizationPayment[];
   title?: string;
-  maxRows?: number;
 }
 
 const ROWS_PER_PAGE_OPTIONS = [10, 25, 50, 100];
@@ -105,10 +104,10 @@ export function AmortizationTable({
   }, [currentPage, totalPages]);
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold text-foreground mb-4">{tableTitle}</h2>
-      <Card>
-        <CardContent className="p-0">
+    <div className="min-w-0 max-w-full">
+      <h2 className="text-xl font-semibold text-foreground mb-4 sm:text-2xl">{tableTitle}</h2>
+      <Card className="min-w-0">
+        <CardContent className="p-0 min-w-0 overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>

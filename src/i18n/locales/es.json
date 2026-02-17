@@ -26,12 +26,17 @@
     "language": "Idioma",
     "skipToContent": "Saltar al contenido principal",
     "selectLanguage": "Seleccionar idioma",
-    "openMenu": "Abrir menú de navegación"
+    "openMenu": "Abrir menú de navegación",
+    "expandMenu": "Expandir menú",
+    "collapseMenu": "Contraer menú"
   },
   "settings": {
     "title": "Ajustes",
     "subtitle": "Configura el idioma y otras preferencias de la aplicación.",
-    "languageLabel": "Idioma"
+    "languageLabel": "Idioma",
+    "themeLabel": "Tema",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro"
   },
   "home": {
     "title": "Bienvenido a Simuladores Financieros",
@@ -77,6 +82,12 @@
       "reducePaymentShort": "Reducir Cuota",
       "monthHelper": "Debe estar entre mes 1 y {{max}}"
     },
+    "chart": {
+      "evolution": "Evolución del Saldo de la Deuda",
+      "interestSavings": "Intereses Acumulados",
+      "withoutPrepayment": "Sin Abonos",
+      "withPrepayment": "Con Abonos"
+    },
     "comparison": {
       "title": "Comparación de Escenarios",
       "strategy": "Estrategia",
@@ -118,6 +129,9 @@
     "period": "Período",
     "invested": "Invertido",
     "interest": "Intereses",
-    "balance": "Saldo"
+    "balance": "Saldo",
+    "chart": {
+      "profitability": "Rentabilidad en el tiempo"
+    }
   }
 }

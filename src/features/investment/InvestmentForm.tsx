@@ -74,7 +74,7 @@ export function InvestmentForm({
   const months = inputs.durationMonths % 12;
 
   return (
-    <Card>
+    <Card className="min-w-0">
       <CardHeader>
         <CardTitle>{t('investment.data')}</CardTitle>
       </CardHeader>

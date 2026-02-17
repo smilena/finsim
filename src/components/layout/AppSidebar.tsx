@@ -1,15 +1,19 @@
 /**
- * Sidebar navigation - nav items including Ajustes (settings page)
+ * Sidebar navigation - nav items and footer with language flags + theme toggle
  */
 
 'use client';
 
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useThemeModeContext } from '@/theme/ThemeModeContext';
 import { ROUTES } from '@/types/common.types';
 import type { MenuItem } from '@/types/common.types';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Home, TrendingUp, CreditCard, Settings, LineChart, Coins } from 'lucide-react';
+import { Home, TrendingUp, CreditCard, LineChart, Coins, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/layout/ThemeToggle';
+import { LanguageSelector } from '@/components/layout/LanguageSelector';
 import { cn } from '@/lib/utils';
 
 export interface AppSidebarProps {
@@ -22,32 +26,108 @@ export interface AppSidebarProps {
    * Whether to use compact styling (e.g. inside sheet)
    */
   compact?: boolean;
+
+  /**
+   * Whether sidebar is collapsed (icons only)
+   */
+  collapsed?: boolean;
+
+  /**
+   * Callback to toggle sidebar collapse (desktop) or open/close sheet (mobile)
+   */
+  onToggleCollapse?: () => void;
+
+  /**
+   * When provided, logo acts as toggle (calls this on click) instead of linking to home
+   */
+  onLogoClick?: () => void;
 }
 
-export function AppSidebar({ onClose, compact = false }: AppSidebarProps) {
+export function AppSidebar({
+  onClose,
+  compact = false,
+  collapsed = false,
+  onLogoClick,
+}: AppSidebarProps) {
   const { t } = useLanguage();
+  const { mode, toggleTheme } = useThemeModeContext();
   const pathname = usePathname();
 
   const menuItems: MenuItem[] = [
-    { label: t('nav.home'), path: ROUTES.HOME, icon: <Home className="h-5 w-5" /> },
-    { label: t('nav.investment'), path: ROUTES.INVESTMENT, icon: <TrendingUp className="h-5 w-5" /> },
-    { label: t('nav.debt'), path: ROUTES.DEBT, icon: <CreditCard className="h-5 w-5" /> },
+    { label: t('nav.home'), path: ROUTES.HOME, icon: <Home className="h-5 w-5 shrink-0" /> },
+    { label: t('nav.investment'), path: ROUTES.INVESTMENT, icon: <TrendingUp className="h-5 w-5 shrink-0" /> },
+    { label: t('nav.debt'), path: ROUTES.DEBT, icon: <CreditCard className="h-5 w-5 shrink-0" /> },
   ];
 
-  const isSettingsActive = pathname === ROUTES.SETTINGS;
-
   return (
-    <div className={cn('flex h-full flex-col', compact ? 'w-full' : 'w-56')}>
-      {/* Header: icon */}
-      <div className={cn(
-        'flex items-center justify-center border-b border-border',
-        compact ? 'px-4 py-4 pr-12 pt-14' : 'px-4 py-5'
-      )}>
-        <Link href={ROUTES.HOME} className="flex items-center gap-2 text-primary font-semibold" aria-label={t('nav.appTitle')}>
-          <LineChart className="h-9 w-9 shrink-0" />
-          <Coins className="h-9 w-9 shrink-0" />
-          <span className="text-lg tracking-tight">{t('nav.brandName')}</span>
-        </Link>
+    <div
+      className={cn(
+        'flex h-full flex-col transition-[width] duration-200',
+        compact ? 'w-full' : collapsed ? 'w-16' : 'w-56'
+      )}
+    >
+      {/* Header: logo + arrow toggle (when onLogoClick provided) */}
+      <div
+        className={cn(
+          'flex items-center justify-between gap-2 border-b border-border',
+          compact ? 'px-4 py-4 pr-12 pt-14' : 'px-4 py-5',
+          collapsed && !compact && 'justify-center px-2 py-5'
+        )}
+      >
+        {onLogoClick ? (
+          <Button
+            variant="ghost"
+            className={cn(
+              'h-auto shrink-0 p-0 text-primary font-semibold hover:bg-transparent',
+              collapsed && !compact ? 'gap-0' : 'gap-2'
+            )}
+            aria-label={t('nav.appTitle')}
+            onClick={onLogoClick}
+          >
+            <LineChart className="h-9 w-9 shrink-0" />
+            {!collapsed && (
+              <>
+                <Coins className="h-9 w-9 shrink-0" />
+                <span className="text-lg tracking-tight">{t('nav.brandName')}</span>
+              </>
+            )}
+          </Button>
+        ) : (
+          <Link
+            href={ROUTES.HOME}
+            className={cn(
+              'flex items-center text-primary font-semibold',
+              collapsed && !compact ? 'gap-0' : 'gap-2'
+            )}
+            aria-label={t('nav.appTitle')}
+            onClick={onClose}
+          >
+            <LineChart className="h-9 w-9 shrink-0" />
+            {!collapsed && (
+              <>
+                <Coins className="h-9 w-9 shrink-0" />
+                <span className="text-lg tracking-tight">{t('nav.brandName')}</span>
+              </>
+            )}
+          </Link>
+        )}
+        {onLogoClick && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onLogoClick}
+            className="shrink-0"
+            aria-label={collapsed && !compact ? t('nav.expandMenu') : t('nav.collapseMenu')}
+          >
+            {compact ? (
+              <ChevronLeft className="h-5 w-5" />
+            ) : collapsed ? (
+              <ChevronRight className="h-5 w-5" />
+            ) : (
+              <ChevronLeft className="h-5 w-5" />
+            )}
+          </Button>
+        )}
       </div>
 
       {/* Nav links */}
@@ -62,14 +142,17 @@ export function AppSidebar({ onClose, compact = false }: AppSidebarProps) {
                   onClick={onClose}
                   className={cn(
                     'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+                    collapsed && !compact && 'justify-center px-2',
                     isActive
                       ? 'bg-primary/15 text-primary'
                       : 'text-foreground-secondary hover:bg-muted hover:text-foreground'
                   )}
                   aria-current={isActive ? 'page' : undefined}
+                  aria-label={item.label}
+                  title={collapsed && !compact ? item.label : undefined}
                 >
                   {item.icon}
-                  {item.label}
+                  {!collapsed && item.label}
                 </Link>
               </li>
             );
@@ -77,22 +160,33 @@ export function AppSidebar({ onClose, compact = false }: AppSidebarProps) {
         </ul>
       </nav>
 
-      {/* Ajustes al final del sidebar */}
-      <div className="border-t border-border px-2 py-4">
-        <Link
-          href={ROUTES.SETTINGS}
-          onClick={onClose}
+      {/* Footer: language flags + theme toggle */}
+      <div
+        className={cn(
+          'border-t border-border px-2 py-4',
+          collapsed && !compact && 'flex flex-col items-center gap-2'
+        )}
+      >
+        <div
           className={cn(
-            'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
-            isSettingsActive
-              ? 'bg-primary/15 text-primary'
-              : 'text-foreground-secondary hover:bg-muted hover:text-foreground'
+            'flex items-center gap-2',
+            collapsed && !compact && 'flex-col'
           )}
-          aria-current={isSettingsActive ? 'page' : undefined}
+          onClick={(e) => e.stopPropagation()}
         >
-          <Settings className="h-5 w-5" />
-          {t('nav.settings')}
-        </Link>
+          <LanguageSelector
+            fullWidth={!collapsed && !compact}
+            compact={collapsed && !compact}
+          />
+          <div
+            className={cn(
+              'shrink-0 bg-border',
+              collapsed && !compact ? 'h-px w-6' : 'h-6 w-px'
+            )}
+            aria-hidden
+          />
+          <ThemeToggle mode={mode} onToggle={toggleTheme} />
+        </div>
       </div>
     </div>
   );

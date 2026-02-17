@@ -62,7 +62,7 @@ export function DebtForm({
   const months = inputs.termMonths % 12;
 
   return (
-    <Card>
+    <Card className="min-w-0">
       <CardHeader>
         <CardTitle>{t('debt.loanData')}</CardTitle>
       </CardHeader>

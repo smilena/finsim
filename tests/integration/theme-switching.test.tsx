@@ -30,7 +30,7 @@ function TestThemeWrapper({ children }: { children: React.ReactNode }) {
 }
 
 describe('Theme Switching Integration', () => {
-  it('ThemeToggle displays correct aria-label based on mode', () => {
+  it('ThemeToggle displays correct aria-label based on mode (default light)', () => {
     render(
       <TestThemeWrapper>
         <ThemeToggleWithContext />
