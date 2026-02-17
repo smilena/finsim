@@ -70,7 +70,7 @@ export function AppSidebar({
       <div
         className={cn(
           'flex min-w-0 items-center border-b border-border',
-          compact ? 'justify-start gap-2 px-3 py-4 pt-14' : 'justify-between gap-2 px-4 py-5',
+          compact ? 'justify-between gap-2 px-3 py-4 pt-14' : 'justify-between gap-2 px-4 py-5',
           collapsed && !compact && 'justify-start gap-1 px-1.5 py-4'
         )}
       >
