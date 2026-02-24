@@ -20,20 +20,20 @@ export const CHART_COLORS_DARK = {
 } as const;
 
 export const CHART_COLORS_LIGHT = {
-  debtWithoutPrepayment: '#dc2626',
-  debtWithPrepayment: '#059669',
-  interest: '#d97706',
-  principal: '#0284c7',
-  savings: '#059669',
-  grid: '#cbd5e1',
-  text: '#0f172a',
+  debtWithoutPrepayment: '#e11d48',
+  debtWithPrepayment: '#16a34a',
+  interest: '#f59e0b',
+  principal: '#0ea5e9',
+  savings: '#16a34a',
+  grid: '#e5e7eb',
+  text: '#0b1220',
   tooltip: {
     background: '#ffffff',
-    border: '#e2e8f0',
-    text: '#0f172a',
+    border: '#e5e7eb',
+    text: '#0b1220',
   },
-  investment: '#7c3aed',
-  returns: '#0284c7',
+  investment: '#4f46e5',
+  returns: '#0d9488',
 } as const;
 
 export type ChartColors = typeof CHART_COLORS_DARK | typeof CHART_COLORS_LIGHT;

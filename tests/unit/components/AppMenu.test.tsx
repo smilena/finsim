@@ -3,7 +3,10 @@
  */
 
 import { render, screen } from '@testing-library/react';
+import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
 import { AppMenu } from '@/components/layout/AppMenu';
+import { LanguageProvider } from '@/contexts/LanguageContext';
+import { ThemeModeProvider } from '@/theme/ThemeModeContext';
 import type { MenuItem } from '@/types/common.types';
 import { Home } from 'lucide-react';
 
@@ -18,6 +21,23 @@ jest.mock('next/link', () => {
   });
 });
 
+const theme = createTheme();
+const themeModeValue = { mode: 'light' as const, toggleTheme: jest.fn(), setTheme: jest.fn() };
+
+function AllProviders({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeModeProvider value={themeModeValue}>
+      <MuiThemeProvider theme={theme}>
+        <LanguageProvider>{children}</LanguageProvider>
+      </MuiThemeProvider>
+    </ThemeModeProvider>
+  );
+}
+
+function renderWithProviders(ui: React.ReactElement) {
+  return render(<AllProviders>{ui}</AllProviders>);
+}
+
 const mockMenuItems: MenuItem[] = [
   { label: 'Inicio', path: '/', icon: <Home /> },
   { label: 'Inversión', path: '/investment' },
@@ -31,7 +51,7 @@ describe('AppMenu', () => {
 
   describe('Desktop mode', () => {
     it('renders all menu items as buttons', () => {
-      render(
+      renderWithProviders(
         <AppMenu items={mockMenuItems} currentPath="/" isOpen={false} onClose={jest.fn()} isMobile={false} />
       );
 
@@ -41,7 +61,7 @@ describe('AppMenu', () => {
     });
 
     it('renders navigation with correct structure', () => {
-      render(
+      renderWithProviders(
         <AppMenu items={mockMenuItems} currentPath="/" isOpen={false} onClose={jest.fn()} isMobile={false} />
       );
 
@@ -51,7 +71,7 @@ describe('AppMenu', () => {
     });
 
     it('renders all navigation items', () => {
-      render(
+      renderWithProviders(
         <AppMenu items={mockMenuItems} currentPath="/" isOpen={false} onClose={jest.fn()} isMobile={false} />
       );
 
@@ -64,7 +84,7 @@ describe('AppMenu', () => {
 
   describe('Mobile mode', () => {
     it('renders sheet when open', () => {
-      render(
+      renderWithProviders(
         <AppMenu items={mockMenuItems} currentPath="/" isOpen={true} onClose={jest.fn()} isMobile={true} />
       );
 
@@ -74,7 +94,7 @@ describe('AppMenu', () => {
     });
 
     it('renders all items in mobile sheet', () => {
-      render(
+      renderWithProviders(
         <AppMenu items={mockMenuItems} currentPath="/" isOpen={true} onClose={jest.fn()} isMobile={true} />
       );
 
@@ -85,13 +105,15 @@ describe('AppMenu', () => {
     });
 
     it('renders sheet with correct open state', () => {
-      const { rerender } = render(
+      const { rerender } = renderWithProviders(
         <AppMenu items={mockMenuItems} currentPath="/" isOpen={false} onClose={jest.fn()} isMobile={true} />
       );
 
       // When open, it should be visible
       rerender(
-        <AppMenu items={mockMenuItems} currentPath="/" isOpen={true} onClose={jest.fn()} isMobile={true} />
+        <AllProviders>
+          <AppMenu items={mockMenuItems} currentPath="/" isOpen={true} onClose={jest.fn()} isMobile={true} />
+        </AllProviders>
       );
 
       expect(screen.getByRole('navigation')).toBeInTheDocument();
@@ -100,7 +122,7 @@ describe('AppMenu', () => {
 
   describe('Accessibility', () => {
     it('has navigation landmark on desktop', () => {
-      render(
+      renderWithProviders(
         <AppMenu items={mockMenuItems} currentPath="/" isOpen={false} onClose={jest.fn()} isMobile={false} />
       );
 
@@ -108,7 +130,7 @@ describe('AppMenu', () => {
     });
 
     it('has navigation landmark on mobile', () => {
-      render(
+      renderWithProviders(
         <AppMenu items={mockMenuItems} currentPath="/" isOpen={true} onClose={jest.fn()} isMobile={true} />
       );
 

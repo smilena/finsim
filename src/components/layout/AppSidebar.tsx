@@ -175,17 +175,23 @@ export function AppSidebar({
           onClick={(e) => e.stopPropagation()}
         >
           <LanguageSelector
-            fullWidth={!collapsed && !compact}
+            // Full-width only in the mobile sheet/sidebar (compact mode).
+            // On desktop, keep it "fit" so it doesn't overflow next to ThemeToggle.
+            fullWidth={compact && !collapsed}
             compact={collapsed && !compact}
           />
-          <div
-            className={cn(
-              'shrink-0 bg-border',
-              collapsed && !compact ? 'h-px w-6' : 'h-6 w-px'
-            )}
-            aria-hidden
-          />
-          <ThemeToggle mode={mode} onToggle={toggleTheme} />
+          {!compact && (
+            <>
+              <div
+                className={cn(
+                  'shrink-0 bg-border',
+                  collapsed && !compact ? 'h-px w-6' : 'h-6 w-px'
+                )}
+                aria-hidden
+              />
+              <ThemeToggle mode={mode} onToggle={toggleTheme} />
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -68,6 +68,12 @@ export interface NumberInputProps {
    * @default true
    */
   fullWidth?: boolean;
+
+  /**
+   * When true, empty field is treated as 0 (for fields like monthly contribution that allow zero)
+   * @default false
+   */
+  allowEmptyAsZero?: boolean;
 }
 
 /**
@@ -85,6 +91,7 @@ export function NumberInput({
   required = false,
   disabled = false,
   fullWidth = true,
+  allowEmptyAsZero = false,
 }: NumberInputProps) {
   const [displayValue, setDisplayValue] = React.useState<string>(value.toString());
 
@@ -97,8 +104,10 @@ export function NumberInput({
     const stringValue = event.target.value;
     setDisplayValue(stringValue);
 
-    // If empty, don't call onChange to avoid defaulting to 0
     if (stringValue === '') {
+      if (allowEmptyAsZero) {
+        onChange(0);
+      }
       return;
     }
 

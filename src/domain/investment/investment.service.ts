@@ -48,13 +48,30 @@ export function calculateInvestmentProjection(input: InvestmentInput): Investmen
     years
   );
 
-  // Calculate totals
+  // Calculate totals (these are the authoritative values shown in the card)
   const totalInvested = initialAmount + monthlyContribution * durationMonths;
   const finalValue = fvPrincipal + fvContributions;
   const totalInterestEarned = finalValue - totalInvested;
 
   // Generate period-by-period breakdown
-  const breakdown = generateInvestmentBreakdown(input, 'monthly');
+  let breakdown = generateInvestmentBreakdown(input, 'monthly');
+
+  // Scale breakdown so last period matches card totals (avoids drop at end of chart)
+  if (breakdown.length > 0) {
+    const last = breakdown[breakdown.length - 1];
+    const interestScale =
+      last.interestEarned > 0 ? totalInterestEarned / last.interestEarned : 1;
+
+    breakdown = breakdown.map((p) => {
+      const scaledInterest = roundToCents(p.interestEarned * interestScale);
+      const scaledBalance = roundToCents(p.totalInvested + scaledInterest);
+      return {
+        ...p,
+        interestEarned: scaledInterest,
+        balance: scaledBalance,
+      };
+    });
+  }
 
   return {
     totalInvested: roundToCents(totalInvested),

@@ -9,7 +9,6 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useResponsiveMenu } from '@/hooks/useResponsiveMenu';
 import { useThemeModeContext } from '@/theme/ThemeModeContext';
 import { AppSidebar } from './AppSidebar';
-import { LanguageSelector } from './LanguageSelector';
 import { ThemeToggle } from './ThemeToggle';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
@@ -85,7 +84,6 @@ export function AppLayout({ children }: AppLayoutProps) {
             {t('nav.appTitle')}
           </h1>
           <div className="flex shrink-0 items-center gap-0.5">
-            <LanguageSelector />
             <ThemeToggle mode={mode} onToggle={toggleTheme} />
           </div>
         </header>

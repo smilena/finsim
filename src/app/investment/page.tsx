@@ -12,6 +12,7 @@ import { InvestmentBreakdownTable } from '@/features/investment/InvestmentBreakd
 import { InvestmentProfitabilityChart } from '@/features/investment/InvestmentProfitabilityChart';
 import { useInvestmentSimulator } from '@/features/investment/useInvestmentSimulator';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { TrendingUp } from 'lucide-react';
 
 export default function InvestmentPage() {
   const { t } = useLanguage();
@@ -21,8 +22,9 @@ export default function InvestmentPage() {
   return (
     <AppLayout>
       <div className="min-w-0 max-w-full">
-        <h1 className="text-3xl font-bold text-foreground mb-2 sm:text-4xl">
+        <h1 className="mb-2 flex items-center gap-3 text-3xl font-bold text-foreground sm:text-4xl">
           {t('investment.title')}
+          <TrendingUp className="h-8 w-8 text-primary sm:h-9 sm:w-9" aria-hidden />
         </h1>
         <p className="text-base text-foreground-secondary mb-8">
           {t('investment.subtitle')}

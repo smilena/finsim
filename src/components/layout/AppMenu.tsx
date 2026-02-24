@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import type { MenuItem } from '@/types/common.types';
+import { LanguageSelector } from './LanguageSelector';
 
 export interface AppMenuProps {
   /**
@@ -72,29 +73,35 @@ export function AppMenu({ items, currentPath, isOpen, onClose, isMobile }: AppMe
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <SheetContent side="left">
-        <nav aria-label="Main navigation" className="mt-8">
-          <ul className="space-y-2">
-            {items.map((item) => {
-              const isActive = currentPath === item.path;
-              return (
-                <li key={item.path}>
-                  <Button
-                    asChild
-                    variant={isActive ? 'secondary' : 'ghost'}
-                    className={cn('w-full justify-start', isActive && 'font-bold')}
-                    onClick={onClose}
-                    aria-current={isActive ? 'page' : undefined}
-                  >
-                    <Link href={item.path}>
-                      {item.icon && <span className="mr-2">{item.icon}</span>}
-                      {item.label}
-                    </Link>
-                  </Button>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+        <div className="flex h-full flex-col">
+          <nav aria-label="Main navigation" className="mt-8 flex-1">
+            <ul className="space-y-2">
+              {items.map((item) => {
+                const isActive = currentPath === item.path;
+                return (
+                  <li key={item.path}>
+                    <Button
+                      asChild
+                      variant={isActive ? 'secondary' : 'ghost'}
+                      className={cn('w-full justify-start', isActive && 'font-bold')}
+                      onClick={onClose}
+                      aria-current={isActive ? 'page' : undefined}
+                    >
+                      <Link href={item.path}>
+                        {item.icon && <span className="mr-2">{item.icon}</span>}
+                        {item.label}
+                      </Link>
+                    </Button>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          <div className="border-t border-border p-4" onClick={(e) => e.stopPropagation()}>
+            <LanguageSelector fullWidth />
+          </div>
+        </div>
       </SheetContent>
     </Sheet>
   );

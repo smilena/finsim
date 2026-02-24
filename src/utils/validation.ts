@@ -88,13 +88,11 @@ export function validateInvestmentInput(input: Partial<InvestmentInput>): Valida
     errors.initialAmount = 'Initial amount is required';
   }
 
-  // Validate monthly contribution
+  // Validate monthly contribution (no upper limit)
   if (input.monthlyContribution !== undefined) {
     const error = validateNonNegativeNumber(input.monthlyContribution, 'Monthly contribution');
     if (error) {
       errors.monthlyContribution = error;
-    } else if (input.monthlyContribution > 1_000_000) {
-      errors.monthlyContribution = 'Monthly contribution must be at most $1,000,000';
     }
   } else {
     errors.monthlyContribution = 'Monthly contribution is required';

@@ -123,7 +123,7 @@ export interface NumericConstraint {
  */
 export const INPUT_CONSTRAINTS = {
   initialAmount: { min: 0, max: 1_000_000_000, step: 0.01, decimals: 2 },
-  monthlyContribution: { min: 0, max: 1_000_000, step: 0.01, decimals: 2 },
+  monthlyContribution: { min: 0, step: 0.01, decimals: 2 },
   durationMonths: { min: 1, max: 1200, step: 1, decimals: 0 },
   annualInterestRate: { min: 0, max: 100, step: 0.01, decimals: 2 },
   loanAmount: { min: 0, max: 100_000_000, step: 0.01, decimals: 2 },

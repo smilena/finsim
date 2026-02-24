@@ -10,6 +10,8 @@ import { AppMenu } from './AppMenu';
 import { LanguageSelector } from './LanguageSelector';
 import { useResponsiveMenu } from '@/hooks/useResponsiveMenu';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useThemeModeContext } from '@/theme/ThemeModeContext';
+import { ThemeToggle } from './ThemeToggle';
 import { ROUTES } from '@/types/common.types';
 import type { MenuItem } from '@/types/common.types';
 import { usePathname } from 'next/navigation';
@@ -22,6 +24,7 @@ import { usePathname } from 'next/navigation';
  */
 export function AppHeader() {
   const { t } = useLanguage();
+  const { mode, toggleTheme } = useThemeModeContext();
   const { isMobile, isOpen, toggleMenu, closeMenu } = useResponsiveMenu();
   const pathname = usePathname();
 
@@ -48,7 +51,7 @@ export function AppHeader() {
             </Button>
           )}
 
-          <h1 className="flex-1 text-xl font-semibold text-foreground">
+          <h1 className="flex-1 min-w-0 text-xl font-semibold text-foreground truncate">
             {t('nav.appTitle')}
           </h1>
 
@@ -56,9 +59,10 @@ export function AppHeader() {
             <div className="flex items-center gap-2">
               <AppMenu items={menuItems} currentPath={pathname} isOpen={false} onClose={() => {}} isMobile={false} />
               <LanguageSelector />
+              <ThemeToggle mode={mode} onToggle={toggleTheme} />
             </div>
           )}
-          {isMobile && <LanguageSelector />}
+          {isMobile && <ThemeToggle mode={mode} onToggle={toggleTheme} />}
         </div>
       </header>
 

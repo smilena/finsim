@@ -79,7 +79,7 @@ export function InvestmentForm({
         <CardTitle>{t('investment.data')}</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <NumberInput
               label={t('investment.initialAmount')}
@@ -99,6 +99,7 @@ export function InvestmentForm({
               prefix="$"
               constraints={INPUT_CONSTRAINTS.monthlyContribution}
               required
+              allowEmptyAsZero
             />
 
             <NumberInput

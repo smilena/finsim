@@ -11,35 +11,35 @@ import type { PaletteOptions } from '@mui/material/styles';
 export const lightPalette: PaletteOptions = {
   mode: 'light',
   primary: {
-    main: '#2563eb',
-    light: '#60a5fa',
-    dark: '#1d4ed8',
+    main: '#4f46e5',
+    light: '#818cf8',
+    dark: '#4338ca',
     contrastText: '#ffffff',
   },
   secondary: {
-    main: '#059669',
-    light: '#34d399',
-    dark: '#047857',
+    main: '#0d9488',
+    light: '#2dd4bf',
+    dark: '#0f766e',
     contrastText: '#ffffff',
   },
   success: {
-    main: '#059669',
+    main: '#16a34a',
   },
   error: {
-    main: '#dc2626',
+    main: '#e11d48',
   },
   warning: {
-    main: '#d97706',
+    main: '#f59e0b',
   },
   info: {
-    main: '#0284c7',
+    main: '#0ea5e9',
   },
   background: {
-    default: '#f8fafc',
+    default: '#f7f8fc',
     paper: '#ffffff',
   },
   text: {
-    primary: '#0f172a',
+    primary: '#0b1220',
     secondary: '#475569',
     disabled: '#94a3b8',
   },
