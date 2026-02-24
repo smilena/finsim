@@ -174,21 +174,24 @@ export function AppSidebar({
           )}
           onClick={(e) => e.stopPropagation()}
         >
-          <LanguageSelector
-            // Full-width only in the mobile sheet/sidebar (compact mode).
-            // On desktop, keep it "fit" so it doesn't overflow next to ThemeToggle.
-            fullWidth={compact && !collapsed}
-            compact={collapsed && !compact}
-          />
+          {/* Mostrar toggle de idioma solo con sidebar expandido (mobile y desktop). Colapsado se oculta para no desbordar. */}
+          {!collapsed && (
+            <LanguageSelector
+              fullWidth={compact}
+              compact={false}
+            />
+          )}
           {!compact && (
             <>
-              <div
-                className={cn(
-                  'shrink-0 bg-border',
-                  collapsed && !compact ? 'h-px w-6' : 'h-6 w-px'
-                )}
-                aria-hidden
-              />
+              {!collapsed && (
+                <div
+                  className={cn(
+                    'shrink-0 bg-border',
+                    'h-6 w-px'
+                  )}
+                  aria-hidden
+                />
+              )}
               <ThemeToggle mode={mode} onToggle={toggleTheme} />
             </>
           )}
