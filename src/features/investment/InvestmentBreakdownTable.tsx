@@ -160,13 +160,6 @@ export function InvestmentBreakdownTable({
         </div>
 
         <div className="flex items-center gap-4">
-          <span className="text-sm text-foreground-secondary">
-            {t('debt.amortization.showingOf', {
-              shown: `${startIndex + 1}-${endIndex}`,
-              total: breakdown.length,
-            })}
-          </span>
-
           <div className="flex items-center gap-1">
             <Button
               variant="outline"

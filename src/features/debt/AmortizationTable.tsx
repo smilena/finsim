@@ -171,12 +171,8 @@ export function AmortizationTable({
           </Select>
         </div>
 
-        {/* Page info and navigation */}
+        {/* Page navigation */}
         <div className="flex items-center gap-4">
-          <span className="text-sm text-foreground-secondary">
-            {t('debt.amortization.showingOf', { shown: `${startIndex + 1}-${endIndex}`, total: schedule.length })}
-          </span>
-          
           <div className="flex items-center gap-1">
             {/* Previous button */}
             <Button

@@ -70,26 +70,25 @@ export function AppSidebar({
       <div
         className={cn(
           'flex min-w-0 items-center border-b border-border',
-          compact ? 'justify-between gap-2 px-3 py-4 pt-14' : 'justify-between gap-2 px-4 py-5',
-          collapsed && !compact && 'justify-start gap-1 px-1.5 py-4'
+          collapsed ? 'justify-center gap-1 px-1.5 py-4' : 'justify-between gap-2 px-4 py-5',
+          !collapsed && compact && 'px-3 pt-5'
         )}
       >
         {onLogoClick ? (
           <Button
             variant="ghost"
             className={cn(
-              'h-auto shrink-0 p-0 text-primary font-semibold hover:bg-transparent',
-              collapsed && !compact ? 'gap-0 min-w-0' : 'gap-2',
-              compact && 'gap-0'
+              'h-auto p-0 text-primary font-semibold hover:bg-transparent',
+              collapsed ? 'shrink-0 gap-0 min-w-0' : 'min-w-0 gap-2'
             )}
             aria-label={t('nav.appTitle')}
             onClick={onLogoClick}
           >
-            <LineChart className={cn('shrink-0', collapsed && !compact ? 'h-7 w-7' : 'h-9 w-9')} />
-            {!compact && !collapsed && (
+            <LineChart className={cn('shrink-0', collapsed ? 'h-6 w-6' : 'h-9 w-9')} />
+            {!collapsed && (
               <>
                 <Coins className="h-9 w-9 shrink-0" />
-                <span className="text-lg tracking-tight">{t('nav.brandName')}</span>
+                <span className="truncate text-lg tracking-tight">{t('nav.brandName')}</span>
               </>
             )}
           </Button>
@@ -97,18 +96,17 @@ export function AppSidebar({
           <Link
             href={ROUTES.HOME}
             className={cn(
-              'flex items-center text-primary font-semibold',
-              collapsed && !compact ? 'gap-0 min-w-0' : 'gap-2',
-              compact && 'gap-0'
+              'flex min-w-0 items-center text-primary font-semibold',
+              collapsed ? 'shrink-0 gap-0' : 'gap-2'
             )}
             aria-label={t('nav.appTitle')}
             onClick={onClose}
           >
-            <LineChart className={cn('shrink-0', collapsed && !compact ? 'h-7 w-7' : 'h-9 w-9')} />
-            {!compact && !collapsed && (
+            <LineChart className={cn('shrink-0', collapsed ? 'h-6 w-6' : 'h-9 w-9')} />
+            {!collapsed && (
               <>
                 <Coins className="h-9 w-9 shrink-0" />
-                <span className="text-lg tracking-tight">{t('nav.brandName')}</span>
+                <span className="truncate text-lg tracking-tight">{t('nav.brandName')}</span>
               </>
             )}
           </Link>
@@ -118,7 +116,7 @@ export function AppSidebar({
             variant="ghost"
             size="icon"
             onClick={onLogoClick}
-            className={cn('shrink-0', collapsed && !compact && 'h-8 w-8')}
+            className={cn('shrink-0', collapsed && 'h-6 w-6')}
             aria-label={collapsed && !compact ? t('nav.expandMenu') : t('nav.collapseMenu')}
           >
             {compact ? (
