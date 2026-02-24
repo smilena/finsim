@@ -68,7 +68,7 @@ export default function HomePage() {
 
       <div className="mt-16 text-center p-6 bg-surface rounded-lg">
         <p className="text-sm text-foreground-secondary">
-          💡 <strong>{t('home.privacy')}</strong> {t('home.privacyText')}
+          <strong>{t('home.privacy')}</strong> {t('home.privacyText')}
         </p>
       </div>
     </AppLayout>

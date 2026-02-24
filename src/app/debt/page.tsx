@@ -59,7 +59,7 @@ export default function DebtPage() {
         {/* Overview */}
         <div className="mb-8">
           <p className="text-sm text-foreground-secondary mb-6">
-            💡 <strong>{t('debt.help')}</strong> {t('debt.helpText')}
+            <strong>{t('debt.help')}</strong> {t('debt.helpText')}
           </p>
 
           <Alert className="mb-6">
@@ -152,7 +152,7 @@ export default function DebtPage() {
         {/* No results message */}
         {!results && (
           <EmptyState
-            title={`🏦 ${t('debt.emptyTitle')}`}
+            title={t('debt.emptyTitle')}
             description={t('debt.emptyDescription')}
           />
         )}

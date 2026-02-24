@@ -45,7 +45,7 @@
     "privacyText": "All calculations are performed in your browser. We don't save or share your financial information."
   },
   "debt": {
-    "title": "Calculate your loan 🏦",
+    "title": "Calculate your loan",
     "subtitle": "Enter your loan details and discover how much you can save with principal payments",
     "help": "Tip:",
     "helpText": "Try both strategies: reducing the term saves more interest, while reducing the payment decreases your monthly payments.",
@@ -91,7 +91,7 @@
     "comparison": {
       "title": "Scenario Comparison",
       "strategy": "Strategy",
-      "savings": "💰 Interest Savings",
+      "savings": "Interest Savings",
       "savingsPercent": "{{percent}} savings",
       "termReduced": "Term reduced: {{months}} months",
       "newPayment": "New payment: {{amount}}"

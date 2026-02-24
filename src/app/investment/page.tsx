@@ -61,7 +61,7 @@ export default function InvestmentPage() {
 
         {!results && (
           <EmptyState
-            title={`👆 ${t('investment.title')}`}
+            title={t('investment.title')}
             description={t('investment.subtitle')}
           />
         )}

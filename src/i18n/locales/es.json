@@ -45,7 +45,7 @@
     "privacyText": "Todos los cálculos se realizan en tu navegador. No guardamos ni compartimos tu información financiera."
   },
   "debt": {
-    "title": "Calcula tu préstamo 🏦",
+    "title": "Calcula tu préstamo",
     "subtitle": "Ingresa los datos de tu préstamo y descubre cuánto puedes ahorrar con abonos a capital",
     "help": "Consejo:",
     "helpText": "Prueba ambas estrategias: reducir el plazo ahorra más intereses, mientras que reducir la cuota disminuye tus pagos mensuales.",
@@ -91,7 +91,7 @@
     "comparison": {
       "title": "Comparación de Escenarios",
       "strategy": "Estrategia",
-      "savings": "💰 Ahorro en Intereses",
+      "savings": "Ahorro en Intereses",
       "savingsPercent": "{{percent}} de ahorro",
       "termReduced": "Plazo reducido: {{months}} meses",
       "newPayment": "Nueva cuota: {{amount}}"
