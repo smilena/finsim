@@ -115,10 +115,10 @@ export function useInvestmentSimulator(): UseInvestmentSimulatorReturn {
     setTimeout(() => {
       try {
         const fullInput: InvestmentInput = {
-          initialAmount: inputs.initialAmount!,
-          monthlyContribution: inputs.monthlyContribution!,
-          durationMonths: inputs.durationMonths!,
-          annualInterestRate: inputs.annualInterestRate!,
+          initialAmount: inputs.initialAmount as number,
+          monthlyContribution: inputs.monthlyContribution as number,
+          durationMonths: inputs.durationMonths as number,
+          annualInterestRate: inputs.annualInterestRate as number,
           compoundingFrequency: inputs.compoundingFrequency,
         };
         const projection = calculateInvestmentProjection(fullInput);

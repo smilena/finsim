@@ -170,7 +170,7 @@ export function useDebtSimulator(): UseDebtSimulatorReturn {
       return;
     }
 
-    const termMonths = inputs.termMonths!;
+    const termMonths = inputs.termMonths as number;
     if (prepayments.length > 0) {
       for (let i = 0; i < prepayments.length; i++) {
         const prepaymentErrors = validatePrepaymentInput(prepayments[i], termMonths);
@@ -185,9 +185,9 @@ export function useDebtSimulator(): UseDebtSimulatorReturn {
     setIsCalculating(true);
 
     const fullInput: DebtInput = {
-      loanAmount: inputs.loanAmount!,
-      annualInterestRate: inputs.annualInterestRate!,
-      termMonths: inputs.termMonths!,
+      loanAmount: inputs.loanAmount as number,
+      annualInterestRate: inputs.annualInterestRate as number,
+      termMonths: inputs.termMonths as number,
       paymentFrequency: inputs.paymentFrequency,
     };
 

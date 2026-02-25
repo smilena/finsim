@@ -74,7 +74,7 @@ export function PrepaymentForm({
               label={t('debt.prepayment.month')}
               value={monthNumber}
               onChange={(value) => {
-                setMonthNumber(value);
+                setMonthNumber(value === '' ? 1 : value);
                 onClearErrors();
               }}
               error={errors.monthNumber}
@@ -86,7 +86,7 @@ export function PrepaymentForm({
               label={t('debt.prepayment.amount')}
               value={amount}
               onChange={(value) => {
-                setAmount(value);
+                setAmount(value === '' ? 0 : value);
                 onClearErrors();
               }}
               error={errors.amount}
