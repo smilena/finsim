@@ -46,37 +46,37 @@ export const lightPalette: PaletteOptions = {
 };
 
 /**
- * Dark theme palette - futuristic neon on dark
+ * Dark theme palette - estilo SaaS empresarial (inspirado en invecont-site)
  */
 export const darkPalette: PaletteOptions = {
   mode: 'dark',
   primary: {
-    main: '#00d4ff',
-    light: '#22e3ff',
-    dark: '#00a8cc',
-    contrastText: '#080810',
+    main: '#06b6d4',
+    light: '#22d3ee',
+    dark: '#0891b2',
+    contrastText: '#0c1222',
   },
   secondary: {
-    main: '#a855f7',
-    light: '#c084fc',
-    dark: '#7c3aed',
+    main: '#6366f1',
+    light: '#818cf8',
+    dark: '#4f46e5',
     contrastText: '#ffffff',
   },
   success: {
-    main: '#00ff88',
+    main: '#10b981',
   },
   error: {
-    main: '#ff4757',
+    main: '#ef4444',
   },
   warning: {
-    main: '#facc15',
+    main: '#f59e0b',
   },
   info: {
-    main: '#00d4ff',
+    main: '#06b6d4',
   },
   background: {
-    default: '#080810',
-    paper: '#0f0f1a',
+    default: '#0c1222',
+    paper: '#111827',
   },
   text: {
     primary: '#f1f5f9',

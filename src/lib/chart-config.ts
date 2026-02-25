@@ -3,20 +3,20 @@
  */
 
 export const CHART_COLORS_DARK = {
-  debtWithoutPrepayment: '#ff4757',
-  debtWithPrepayment: '#00ff88',
-  interest: '#facc15',
-  principal: '#00d4ff',
-  savings: '#00ff88',
-  grid: '#2a2a3e',
+  debtWithoutPrepayment: '#ef4444',
+  debtWithPrepayment: '#10b981',
+  interest: '#f59e0b',
+  principal: '#06b6d4',
+  savings: '#10b981',
+  grid: '#1e293b',
   text: '#f1f5f9',
   tooltip: {
-    background: '#0f0f1a',
-    border: '#2a2a3e',
+    background: '#111827',
+    border: '#1e293b',
     text: '#f1f5f9',
   },
-  investment: '#a855f7',
-  returns: '#00d4ff',
+  investment: '#6366f1',
+  returns: '#06b6d4',
 } as const;
 
 export const CHART_COLORS_LIGHT = {
