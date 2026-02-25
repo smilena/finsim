@@ -10,17 +10,25 @@
 import { useState, useEffect, useRef } from 'react';
 import { applyPrepayments } from '@/domain/debt/debt.service';
 import { validateDebtInput, validatePrepaymentInput } from '@/utils/validation';
-import type { DebtInput, Prepayment, PrepaymentResult } from '@/domain/debt/debt.types';
+import type { DebtInput, Prepayment, PrepaymentResult, PaymentFrequency } from '@/domain/debt/debt.types';
 import type { ValidationErrors } from '@/types/common.types';
+
+/** Estado del formulario: campos numéricos opcionales (vacío = sin valor inicial) */
+export type DebtFormState = {
+  loanAmount?: number;
+  annualInterestRate?: number;
+  termMonths?: number;
+  paymentFrequency: PaymentFrequency;
+};
 
 /**
  * Hook return type
  */
 export interface UseDebtSimulatorReturn {
   /**
-   * Current loan input values
+   * Current loan input values (campos vacíos = undefined)
    */
-  inputs: DebtInput;
+  inputs: DebtFormState;
 
   /**
    * List of prepayments
@@ -45,7 +53,7 @@ export interface UseDebtSimulatorReturn {
   /**
    * Update a single input field
    */
-  updateInput: (field: keyof DebtInput, value: string | number) => void;
+  updateInput: (field: keyof DebtFormState, value: string | number) => void;
 
   /**
    * Add a prepayment
@@ -68,13 +76,8 @@ export interface UseDebtSimulatorReturn {
   reset: () => void;
 }
 
-/**
- * Default initial values
- */
-const DEFAULT_INPUTS: DebtInput = {
-  loanAmount: 200000,
-  annualInterestRate: 5,
-  termMonths: 360, // 30 years
+/** Estado inicial: todos los campos numéricos vacíos */
+const INITIAL_INPUTS: DebtFormState = {
   paymentFrequency: 'monthly',
 };
 
@@ -82,7 +85,7 @@ const DEFAULT_INPUTS: DebtInput = {
  * Hook to manage debt simulator state
  *
  * Handles:
- * - Loan input state
+ * - Loan input state (no initial values)
  * - Prepayment management
  * - Validation
  * - Manual calculation on button click
@@ -90,7 +93,7 @@ const DEFAULT_INPUTS: DebtInput = {
  * - Results management
  */
 export function useDebtSimulator(): UseDebtSimulatorReturn {
-  const [inputs, setInputs] = useState<DebtInput>(DEFAULT_INPUTS);
+  const [inputs, setInputs] = useState<DebtFormState>(INITIAL_INPUTS);
   const [prepayments, setPrepayments] = useState<Prepayment[]>([]);
   const [results, setResults] = useState<PrepaymentResult | null>(null);
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -111,17 +114,14 @@ export function useDebtSimulator(): UseDebtSimulatorReturn {
    * Auto-recalculate when prepayments change (only if results already exist)
    */
   useEffect(() => {
-    // Only auto-recalculate if we already have results (user has calculated before)
-    if (!hasCalculatedRef.current) {
-      return;
-    }
+    if (!hasCalculatedRef.current) return;
 
-    const currentInputs = inputsRef.current;
+    const current = inputsRef.current;
+    if (current.loanAmount == null || current.annualInterestRate == null || current.termMonths == null) return;
 
-    // Validate prepayments if any
     if (prepayments.length > 0) {
       for (let i = 0; i < prepayments.length; i++) {
-        const prepaymentErrors = validatePrepaymentInput(prepayments[i], currentInputs.termMonths);
+        const prepaymentErrors = validatePrepaymentInput(prepayments[i], current.termMonths);
         if (Object.keys(prepaymentErrors).length > 0) {
           setErrors(prepaymentErrors);
           return;
@@ -132,10 +132,16 @@ export function useDebtSimulator(): UseDebtSimulatorReturn {
     setErrors({});
     setIsCalculating(true);
 
-    // Use setTimeout to allow UI to update
+    const fullInput: DebtInput = {
+      loanAmount: current.loanAmount,
+      annualInterestRate: current.annualInterestRate,
+      termMonths: current.termMonths,
+      paymentFrequency: current.paymentFrequency,
+    };
+
     const timer = setTimeout(() => {
       try {
-        const projection = applyPrepayments(currentInputs, prepayments);
+        const projection = applyPrepayments(fullInput, prepayments);
         setResults(projection);
       } catch (error) {
         console.error('Error calculating debt projection:', error);
@@ -157,19 +163,17 @@ export function useDebtSimulator(): UseDebtSimulatorReturn {
    * Calculate projection manually
    */
   const calculate = () => {
-    // Validate inputs
     const validationErrors = validateDebtInput(inputs);
-
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       setResults(null);
       return;
     }
 
-    // Validate prepayments if any
+    const termMonths = inputs.termMonths!;
     if (prepayments.length > 0) {
       for (let i = 0; i < prepayments.length; i++) {
-        const prepaymentErrors = validatePrepaymentInput(prepayments[i], inputs.termMonths);
+        const prepaymentErrors = validatePrepaymentInput(prepayments[i], termMonths);
         if (Object.keys(prepaymentErrors).length > 0) {
           setErrors(prepaymentErrors);
           return;
@@ -180,12 +184,18 @@ export function useDebtSimulator(): UseDebtSimulatorReturn {
     setErrors({});
     setIsCalculating(true);
 
-    // Use setTimeout to allow UI to update
+    const fullInput: DebtInput = {
+      loanAmount: inputs.loanAmount!,
+      annualInterestRate: inputs.annualInterestRate!,
+      termMonths: inputs.termMonths!,
+      paymentFrequency: inputs.paymentFrequency,
+    };
+
     setTimeout(() => {
       try {
-        const projection = applyPrepayments(inputs, prepayments);
+        const projection = applyPrepayments(fullInput, prepayments);
         setResults(projection);
-        hasCalculatedRef.current = true; // Mark as calculated
+        hasCalculatedRef.current = true;
       } catch (error) {
         console.error('Error calculating debt projection:', error);
         setErrors({
@@ -201,12 +211,13 @@ export function useDebtSimulator(): UseDebtSimulatorReturn {
   };
 
   /**
-   * Update a single input field
+   * Update a single input field ('' = vacío → undefined)
    */
-  const updateInput = (field: keyof DebtInput, value: string | number) => {
+  const updateInput = (field: keyof DebtFormState, value: string | number) => {
+    const next = value === '' ? undefined : value;
     setInputs((prev) => ({
       ...prev,
-      [field]: value,
+      [field]: next,
     }));
 
     if (errors[field]) {
@@ -219,16 +230,18 @@ export function useDebtSimulator(): UseDebtSimulatorReturn {
   };
 
   /**
-   * Add a prepayment
+   * Add a prepayment (requiere termMonths definido)
    */
   const addPrepayment = (prepayment: Prepayment) => {
+    if (inputs.termMonths == null) {
+      setErrors({ termMonths: 'Loan term is required' });
+      return;
+    }
     const prepaymentErrors = validatePrepaymentInput(prepayment, inputs.termMonths);
-
     if (Object.keys(prepaymentErrors).length > 0) {
       setErrors(prepaymentErrors);
       return;
     }
-
     setPrepayments((prev) => [...prev, prepayment]);
     setErrors({});
   };
@@ -241,15 +254,15 @@ export function useDebtSimulator(): UseDebtSimulatorReturn {
   };
 
   /**
-   * Reset form to initial state (clears all inputs to defaults)
+   * Reset form to initial state (todos los campos vacíos)
    */
   const reset = () => {
-    setInputs({ ...DEFAULT_INPUTS });
+    setInputs({ ...INITIAL_INPUTS });
     setPrepayments([]);
     setResults(null);
     setErrors({});
     setIsCalculating(false);
-    hasCalculatedRef.current = false; // Reset calculation flag
+    hasCalculatedRef.current = false;
   };
 
   return {

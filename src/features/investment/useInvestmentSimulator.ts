@@ -7,17 +7,26 @@
 import { useState } from 'react';
 import { calculateInvestmentProjection } from '@/domain/investment/investment.service';
 import { validateInvestmentInput } from '@/utils/validation';
-import type { InvestmentInput, InvestmentResult } from '@/domain/investment/investment.types';
+import type { InvestmentInput, InvestmentResult, CompoundingFrequency } from '@/domain/investment/investment.types';
 import type { ValidationErrors } from '@/types/common.types';
+
+/** Estado del formulario: campos numéricos opcionales (vacío = sin valor inicial) */
+export type InvestmentFormState = {
+  initialAmount?: number;
+  monthlyContribution?: number;
+  durationMonths?: number;
+  annualInterestRate?: number;
+  compoundingFrequency: CompoundingFrequency;
+};
 
 /**
  * Hook return type
  */
 export interface UseInvestmentSimulatorReturn {
   /**
-   * Current input values
+   * Current input values (campos vacíos = undefined)
    */
-  inputs: InvestmentInput;
+  inputs: InvestmentFormState;
 
   /**
    * Calculated results (null if not yet calculated)
@@ -37,7 +46,7 @@ export interface UseInvestmentSimulatorReturn {
   /**
    * Update a single input field
    */
-  updateInput: (field: keyof InvestmentInput, value: string | number) => void;
+  updateInput: (field: keyof InvestmentFormState, value: string | number) => void;
 
   /**
    * Calculate investment projection
@@ -50,14 +59,8 @@ export interface UseInvestmentSimulatorReturn {
   reset: () => void;
 }
 
-/**
- * Default initial values
- */
-const DEFAULT_INPUTS: InvestmentInput = {
-  initialAmount: 10000,
-  monthlyContribution: 500,
-  durationMonths: 60, // 5 years
-  annualInterestRate: 7,
+/** Estado inicial: todos los campos numéricos vacíos */
+const INITIAL_INPUTS: InvestmentFormState = {
   compoundingFrequency: 'monthly',
 };
 
@@ -65,27 +68,27 @@ const DEFAULT_INPUTS: InvestmentInput = {
  * Hook to manage investment simulator state
  *
  * Handles:
- * - Form input state
+ * - Form input state (no initial values)
  * - Validation
  * - Calculation orchestration
  * - Results management
  */
 export function useInvestmentSimulator(): UseInvestmentSimulatorReturn {
-  const [inputs, setInputs] = useState<InvestmentInput>(DEFAULT_INPUTS);
+  const [inputs, setInputs] = useState<InvestmentFormState>(INITIAL_INPUTS);
   const [results, setResults] = useState<InvestmentResult | null>(null);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isCalculating, setIsCalculating] = useState(false);
 
   /**
-   * Update a single input field
+   * Update a single input field ('' = vacío → undefined)
    */
-  const updateInput = (field: keyof InvestmentInput, value: string | number) => {
+  const updateInput = (field: keyof InvestmentFormState, value: string | number) => {
+    const next = value === '' ? undefined : value;
     setInputs((prev) => ({
       ...prev,
-      [field]: value,
+      [field]: next,
     }));
 
-    // Clear error for this field when user starts typing
     if (errors[field]) {
       setErrors((prev) => {
         const newErrors = { ...prev };
@@ -99,7 +102,6 @@ export function useInvestmentSimulator(): UseInvestmentSimulatorReturn {
    * Calculate investment projection
    */
   const calculate = () => {
-    // Validate inputs
     const validationErrors = validateInvestmentInput(inputs);
 
     if (Object.keys(validationErrors).length > 0) {
@@ -107,16 +109,19 @@ export function useInvestmentSimulator(): UseInvestmentSimulatorReturn {
       return;
     }
 
-    // Clear errors
     setErrors({});
-
-    // Simulate async calculation for better UX
     setIsCalculating(true);
 
-    // Use setTimeout to allow UI to update
     setTimeout(() => {
       try {
-        const projection = calculateInvestmentProjection(inputs);
+        const fullInput: InvestmentInput = {
+          initialAmount: inputs.initialAmount!,
+          monthlyContribution: inputs.monthlyContribution!,
+          durationMonths: inputs.durationMonths!,
+          annualInterestRate: inputs.annualInterestRate!,
+          compoundingFrequency: inputs.compoundingFrequency,
+        };
+        const projection = calculateInvestmentProjection(fullInput);
         setResults(projection);
       } catch (error) {
         console.error('Error calculating investment projection:', error);
@@ -130,10 +135,10 @@ export function useInvestmentSimulator(): UseInvestmentSimulatorReturn {
   };
 
   /**
-   * Reset form to initial state
+   * Reset form to initial state (todos los campos vacíos)
    */
   const reset = () => {
-    setInputs(DEFAULT_INPUTS);
+    setInputs({ ...INITIAL_INPUTS });
     setResults(null);
     setErrors({});
     setIsCalculating(false);

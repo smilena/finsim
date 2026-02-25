@@ -1,39 +1,47 @@
 /**
- * Chart colors by theme - contrast-safe for light and dark
+ * Chart colors by theme - alineados con la paleta del tema (Invecont)
  */
 
 export const CHART_COLORS_DARK = {
-  debtWithoutPrepayment: '#ef4444',
-  debtWithPrepayment: '#10b981',
+  /** Escenario sin abonos → secondary (púrpura) */
+  debtWithoutPrepayment: '#9471f8',
+  /** Escenario con abonos → primary (cyan) */
+  debtWithPrepayment: '#5dedff',
+  /** Interés acumulado sin abonos */
   interest: '#f59e0b',
-  principal: '#06b6d4',
-  savings: '#10b981',
-  grid: '#1e293b',
-  text: '#f1f5f9',
+  principal: '#5dedff',
+  /** Ahorro / con abonos */
+  savings: '#5dedff',
+  grid: 'rgba(93, 237, 255, 0.15)',
+  text: '#ffffff',
   tooltip: {
-    background: '#111827',
-    border: '#1e293b',
-    text: '#f1f5f9',
+    background: '#171b36',
+    border: 'rgba(93, 237, 255, 0.35)',
+    text: '#e0e0e0',
   },
-  investment: '#6366f1',
-  returns: '#06b6d4',
+  investment: '#9471f8',
+  returns: '#5dedff',
 } as const;
 
 export const CHART_COLORS_LIGHT = {
-  debtWithoutPrepayment: '#e11d48',
-  debtWithPrepayment: '#16a34a',
+  /** Escenario sin abonos → secondary (púrpura) */
+  debtWithoutPrepayment: '#7c3aed',
+  /** Escenario con abonos → primary (cyan) */
+  debtWithPrepayment: '#0891b2',
+  /** Interés acumulado sin abonos */
   interest: '#f59e0b',
-  principal: '#0ea5e9',
-  savings: '#16a34a',
-  grid: '#e5e7eb',
-  text: '#0b1220',
+  principal: '#0891b2',
+  /** Ahorro / con abonos */
+  savings: '#0891b2',
+  grid: 'rgba(8, 145, 178, 0.12)',
+  text: '#0f172a',
   tooltip: {
     background: '#ffffff',
-    border: '#e5e7eb',
-    text: '#0b1220',
+    border: 'rgba(8, 145, 178, 0.25)',
+    text: '#0f172a',
   },
-  investment: '#4f46e5',
-  returns: '#0d9488',
+  investment: '#7c3aed',
+  returns: '#0891b2',
 } as const;
 
 export type ChartColors = typeof CHART_COLORS_DARK | typeof CHART_COLORS_LIGHT;

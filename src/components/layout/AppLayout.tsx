@@ -40,7 +40,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
-    <div className="flex min-h-screen min-w-0 bg-gradient-to-br from-background via-surface to-background">
+    <div className="layout-root flex min-h-screen min-w-0 bg-gradient-to-br from-background via-surface to-background">
       {/* Skip to main content - accessibility for keyboard users */}
       <a
         href="#main-content"

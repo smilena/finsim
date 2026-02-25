@@ -6,20 +6,20 @@
 import type { PaletteOptions } from '@mui/material/styles';
 
 /**
- * Light theme palette - soft blues and greens
+ * Light theme palette - Invecont vivo (cyan, púrpura, fondos claros)
  */
 export const lightPalette: PaletteOptions = {
   mode: 'light',
   primary: {
-    main: '#4f46e5',
-    light: '#818cf8',
-    dark: '#4338ca',
+    main: '#0891b2',
+    light: '#06b6d4',
+    dark: '#0e7490',
     contrastText: '#ffffff',
   },
   secondary: {
-    main: '#0d9488',
-    light: '#2dd4bf',
-    dark: '#0f766e',
+    main: '#7c3aed',
+    light: '#8b5cf6',
+    dark: '#6d28d9',
     contrastText: '#ffffff',
   },
   success: {
@@ -32,34 +32,34 @@ export const lightPalette: PaletteOptions = {
     main: '#f59e0b',
   },
   info: {
-    main: '#0ea5e9',
+    main: '#0891b2',
   },
   background: {
-    default: '#f7f8fc',
+    default: '#f0f4ff',
     paper: '#ffffff',
   },
   text: {
-    primary: '#0b1220',
+    primary: '#0f172a',
     secondary: '#475569',
     disabled: '#94a3b8',
   },
 };
 
 /**
- * Dark theme palette - estilo SaaS empresarial (inspirado en invecont-site)
+ * Dark theme palette - concepto Invecont (índigo, cyan, púrpura)
  */
 export const darkPalette: PaletteOptions = {
   mode: 'dark',
   primary: {
-    main: '#06b6d4',
+    main: '#5dedff',
     light: '#22d3ee',
-    dark: '#0891b2',
-    contrastText: '#0c1222',
+    dark: '#00c2ff',
+    contrastText: '#ffffff',
   },
   secondary: {
-    main: '#6366f1',
-    light: '#818cf8',
-    dark: '#4f46e5',
+    main: '#9471f8',
+    light: '#a78bfa',
+    dark: '#876dfd',
     contrastText: '#ffffff',
   },
   success: {
@@ -72,15 +72,15 @@ export const darkPalette: PaletteOptions = {
     main: '#f59e0b',
   },
   info: {
-    main: '#06b6d4',
+    main: '#5dedff',
   },
   background: {
-    default: '#0c1222',
-    paper: '#111827',
+    default: '#0a0c2d',
+    paper: '#171b36',
   },
   text: {
-    primary: '#f1f5f9',
-    secondary: '#94a3b8',
-    disabled: '#64748b',
+    primary: '#ffffff',
+    secondary: '#e0e0e0',
+    disabled: '#a0a0a0',
   },
 };

@@ -1,5 +1,5 @@
 /**
- * Investment profitability chart - balance, total invested, interest earned over time
+ * Investment profitability chart - balance and total invested over time
  */
 
 'use client';
@@ -25,7 +25,7 @@ export interface InvestmentProfitabilityChartProps {
 }
 
 /**
- * Line chart showing balance, total invested, and interest earned over periods
+ * Line chart showing balance and total invested over periods
  */
 export function InvestmentProfitabilityChart({
   breakdown,
@@ -37,7 +37,6 @@ export function InvestmentProfitabilityChart({
     period: p.periodNumber,
     balance: p.balance,
     totalInvested: p.totalInvested,
-    interestEarned: p.interestEarned,
   }));
 
   const CustomTooltip = ({
@@ -107,14 +106,6 @@ export function InvestmentProfitabilityChart({
                 dataKey="totalInvested"
                 name={t('investment.invested')}
                 stroke={colors.principal}
-                strokeWidth={2}
-                dot={false}
-              />
-              <Line
-                type="monotone"
-                dataKey="interestEarned"
-                name={t('investment.interestEarned')}
-                stroke={colors.returns}
                 strokeWidth={2}
                 dot={false}
               />

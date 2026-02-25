@@ -9,20 +9,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { NumberInput } from '@/components/common/NumberInput';
 import { INPUT_CONSTRAINTS } from '@/types/common.types';
 import { useLanguage } from '@/contexts/LanguageContext';
-import type { DebtInput } from '@/domain/debt/debt.types';
+import type { DebtFormState } from '@/features/debt/useDebtSimulator';
 import type { ValidationErrors } from '@/types/common.types';
 import { Loader2 } from 'lucide-react';
 
 export interface DebtFormProps {
   /**
-   * Current loan input values
+   * Current loan input values (campos vacíos = undefined)
    */
-  inputs: DebtInput;
+  inputs: DebtFormState;
 
   /**
    * Update handler for input changes
    */
-  onInputChange: (field: keyof DebtInput, value: string | number) => void;
+  onInputChange: (field: keyof DebtFormState, value: string | number) => void;
 
   /**
    * Calculate handler
@@ -58,11 +58,12 @@ export function DebtForm({
 }: DebtFormProps) {
   const { t } = useLanguage();
 
-  const years = Math.floor(inputs.termMonths / 12);
-  const months = inputs.termMonths % 12;
+  const termMonths = inputs.termMonths ?? 0;
+  const years = Math.floor(termMonths / 12);
+  const months = termMonths % 12;
 
   return (
-    <Card className="min-w-0">
+    <Card className="min-w-0 form-card">
       <CardHeader>
         <CardTitle>{t('debt.loanData')}</CardTitle>
       </CardHeader>
@@ -71,7 +72,7 @@ export function DebtForm({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <NumberInput
               label={t('debt.loanAmount')}
-              value={inputs.loanAmount}
+              value={inputs.loanAmount ?? ''}
               onChange={(value) => onInputChange('loanAmount', value)}
               error={errors.loanAmount}
               prefix="$"
@@ -81,7 +82,7 @@ export function DebtForm({
 
             <NumberInput
               label={t('debt.interestRate')}
-              value={inputs.annualInterestRate}
+              value={inputs.annualInterestRate ?? ''}
               onChange={(value) => onInputChange('annualInterestRate', value)}
               error={errors.annualInterestRate}
               suffix="%"
@@ -91,11 +92,11 @@ export function DebtForm({
 
             <NumberInput
               label={t('debt.term')}
-              value={inputs.termMonths}
+              value={inputs.termMonths ?? ''}
               onChange={(value) => onInputChange('termMonths', value)}
               error={errors.termMonths}
               constraints={INPUT_CONSTRAINTS.termMonths}
-              helperText={t('debt.termHelper', { years, months })}
+              helperText={inputs.termMonths != null ? t('debt.termHelper', { years, months }) : undefined}
               required
             />
 
@@ -105,6 +106,7 @@ export function DebtForm({
                 onClick={onReset}
                 variant="outline"
                 disabled={isCalculating}
+                className="rounded-full"
               >
                 {t('common.reset')}
               </Button>
@@ -113,6 +115,7 @@ export function DebtForm({
                   type="button" 
                   onClick={onCalculate}
                   disabled={isCalculating}
+                  className="btn-cta"
                 >
                   {isCalculating ? (
                     <>

@@ -41,7 +41,7 @@ export function PrepaymentForm({
   };
 
   return (
-    <div className="p-6 border border-border rounded-lg mt-4">
+    <div className="form-card p-6 border border-border rounded-xl mt-4">
       <form onSubmit={handleSubmit}>
         <div className="space-y-4">
           <div>
@@ -97,7 +97,7 @@ export function PrepaymentForm({
           </div>
 
           <div className="flex gap-4 justify-end mt-4">
-            <Button type="submit" size="sm">
+            <Button type="submit" size="sm" className="btn-cta">
               {t('debt.prepayment.add')}
             </Button>
           </div>

@@ -17,14 +17,14 @@ export interface NumberInputProps {
   label: string;
 
   /**
-   * Current value
+   * Current value (empty string = campo vacío, sin valor inicial)
    */
-  value: number;
+  value: number | '';
 
   /**
-   * Change handler
+   * Change handler (empty string cuando el usuario borra el campo)
    */
-  onChange: (value: number) => void;
+  onChange: (value: number | '') => void;
 
   /**
    * Optional error message
@@ -93,11 +93,11 @@ export function NumberInput({
   fullWidth = true,
   allowEmptyAsZero = false,
 }: NumberInputProps) {
-  const [displayValue, setDisplayValue] = React.useState<string>(value.toString());
+  const [displayValue, setDisplayValue] = React.useState<string>(value === '' ? '' : value.toString());
 
   // Sync display value when external value changes
   React.useEffect(() => {
-    setDisplayValue(value.toString());
+    setDisplayValue(value === '' ? '' : value.toString());
   }, [value]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,9 +105,7 @@ export function NumberInput({
     setDisplayValue(stringValue);
 
     if (stringValue === '') {
-      if (allowEmptyAsZero) {
-        onChange(0);
-      }
+      onChange(allowEmptyAsZero ? 0 : '');
       return;
     }
 
@@ -120,9 +118,13 @@ export function NumberInput({
   };
 
   const handleBlur = () => {
-    // On blur, if empty or invalid, restore to last valid value
+    // On blur, if empty or invalid: si el valor externo ya es vacío, mantener vacío; si no, restaurar
     if (displayValue === '' || isNaN(parseFloat(displayValue))) {
-      setDisplayValue(value.toString());
+      if (value === '') {
+        setDisplayValue('');
+      } else {
+        setDisplayValue(value.toString());
+      }
     }
   };
 

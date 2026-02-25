@@ -10,20 +10,21 @@ import { NumberInput } from '@/components/common/NumberInput';
 import { SelectField } from '@/components/common/SelectField';
 import { INPUT_CONSTRAINTS } from '@/types/common.types';
 import { useLanguage } from '@/contexts/LanguageContext';
-import type { InvestmentInput, CompoundingFrequency } from '@/domain/investment/investment.types';
+import type { InvestmentFormState } from '@/features/investment/useInvestmentSimulator';
+import type { CompoundingFrequency } from '@/domain/investment/investment.types';
 import type { ValidationErrors } from '@/types/common.types';
 import { Loader2 } from 'lucide-react';
 
 export interface InvestmentFormProps {
   /**
-   * Current input values
+   * Current input values (campos vacíos = undefined)
    */
-  inputs: InvestmentInput;
+  inputs: InvestmentFormState;
 
   /**
    * Update handler for input changes
    */
-  onInputChange: (field: keyof InvestmentInput, value: string | number) => void;
+  onInputChange: (field: keyof InvestmentFormState, value: string | number) => void;
 
   /**
    * Calculate handler
@@ -70,11 +71,12 @@ export function InvestmentForm({
     onCalculate();
   };
 
-  const years = Math.floor(inputs.durationMonths / 12);
-  const months = inputs.durationMonths % 12;
+  const durationMonths = inputs.durationMonths ?? 0;
+  const years = Math.floor(durationMonths / 12);
+  const months = durationMonths % 12;
 
   return (
-    <Card className="min-w-0">
+    <Card className="min-w-0 form-card">
       <CardHeader>
         <CardTitle>{t('investment.data')}</CardTitle>
       </CardHeader>
@@ -83,7 +85,7 @@ export function InvestmentForm({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <NumberInput
               label={t('investment.initialAmount')}
-              value={inputs.initialAmount}
+              value={inputs.initialAmount ?? ''}
               onChange={(value) => onInputChange('initialAmount', value)}
               error={errors.initialAmount}
               prefix="$"
@@ -93,7 +95,7 @@ export function InvestmentForm({
 
             <NumberInput
               label={t('investment.monthlyContribution')}
-              value={inputs.monthlyContribution}
+              value={inputs.monthlyContribution ?? ''}
               onChange={(value) => onInputChange('monthlyContribution', value)}
               error={errors.monthlyContribution}
               prefix="$"
@@ -104,17 +106,17 @@ export function InvestmentForm({
 
             <NumberInput
               label={t('investment.duration')}
-              value={inputs.durationMonths}
+              value={inputs.durationMonths ?? ''}
               onChange={(value) => onInputChange('durationMonths', value)}
               error={errors.durationMonths}
               constraints={INPUT_CONSTRAINTS.durationMonths}
-              helperText={t('investment.durationHelper', { years, months })}
+              helperText={inputs.durationMonths != null ? t('investment.durationHelper', { years, months }) : undefined}
               required
             />
 
             <NumberInput
               label={t('investment.interestRate')}
-              value={inputs.annualInterestRate}
+              value={inputs.annualInterestRate ?? ''}
               onChange={(value) => onInputChange('annualInterestRate', value)}
               error={errors.annualInterestRate}
               suffix="%"
@@ -134,10 +136,10 @@ export function InvestmentForm({
             />
 
             <div className="md:col-span-2 flex gap-4 justify-end">
-              <Button type="button" variant="outline" onClick={onReset} disabled={isCalculating}>
+              <Button type="button" variant="outline" onClick={onReset} disabled={isCalculating} className="rounded-full">
                 {t('common.reset')}
               </Button>
-              <Button type="submit" disabled={isCalculating}>
+              <Button type="submit" disabled={isCalculating} className="btn-cta">
                 {isCalculating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isCalculating ? t('common.loading') : t('common.calculate')}
               </Button>
