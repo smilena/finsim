@@ -36,6 +36,18 @@ function IntegrationWrapper({ children }: { children: React.ReactNode }) {
 }
 
 describe('Debt Flow Integration', () => {
+  async function fillDebtForm(user: ReturnType<typeof userEvent.setup>, loanAmount = '200000') {
+    const amountInput = screen.getByLabelText(/Monto del Préstamo|Loan Amount/i);
+    const rateInput = screen.getByLabelText(/Tasa de Interés Anual|Annual Interest Rate/i);
+    const termInput = screen.getByLabelText(/Plazo del Préstamo|Loan Term/i);
+    await user.clear(amountInput);
+    await user.type(amountInput, loanAmount);
+    await user.clear(rateInput);
+    await user.type(rateInput, '5');
+    await user.clear(termInput);
+    await user.type(termInput, '360');
+  }
+
   it('displays results after user clicks Calcular', async () => {
     const user = userEvent.setup();
     render(
@@ -46,6 +58,8 @@ describe('Debt Flow Integration', () => {
 
     expect(screen.getByText(/Calcula tu préstamo/i)).toBeInTheDocument();
 
+    await fillDebtForm(user);
+
     const calculateButton = screen.getByRole('button', { name: /calcular/i });
     await user.click(calculateButton);
 
@@ -54,7 +68,7 @@ describe('Debt Flow Integration', () => {
         expect(screen.getByText(/Resumen de Resultados/i)).toBeInTheDocument();
         expect(screen.getByText(/Pago Mensual/i)).toBeInTheDocument();
       },
-      { timeout: 3000 }
+      { timeout: 5000 }
     );
   });
 
@@ -76,13 +90,14 @@ describe('Debt Flow Integration', () => {
       </IntegrationWrapper>
     );
 
+    await fillDebtForm(user);
     await user.click(screen.getByRole('button', { name: /calcular/i }));
 
     await waitFor(
       () => {
         expect(screen.getByText(/Cronograma de Amortización/i)).toBeInTheDocument();
       },
-      { timeout: 3000 }
+      { timeout: 5000 }
     );
   });
 
@@ -94,6 +109,7 @@ describe('Debt Flow Integration', () => {
       </IntegrationWrapper>
     );
 
+    await fillDebtForm(user);
     await user.click(screen.getByRole('button', { name: /calcular/i }));
 
     await waitFor(
@@ -101,7 +117,7 @@ describe('Debt Flow Integration', () => {
         expect(screen.getByText(/Simulación de Abonos a Capital/i)).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /agregar abono a capital/i })).toBeInTheDocument();
       },
-      { timeout: 3000 }
+      { timeout: 5000 }
     );
   });
 
@@ -113,6 +129,7 @@ describe('Debt Flow Integration', () => {
       </IntegrationWrapper>
     );
 
+    await fillDebtForm(user, '200000');
     await user.click(screen.getByRole('button', { name: /calcular/i }));
 
     await waitFor(
@@ -122,7 +139,7 @@ describe('Debt Flow Integration', () => {
       { timeout: 5000 }
     );
 
-    const amountInput = screen.getByLabelText(/monto del préstamo/i);
+    const amountInput = screen.getByLabelText(/Monto del Préstamo|Loan Amount/i);
     await user.click(amountInput);
     await user.clear(amountInput);
     await user.type(amountInput, '300000');

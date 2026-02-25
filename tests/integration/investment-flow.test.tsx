@@ -34,6 +34,21 @@ function IntegrationWrapper({ children }: { children: React.ReactNode }) {
 }
 
 describe('Investment Flow Integration', () => {
+  async function fillInvestmentForm(user: ReturnType<typeof userEvent.setup>) {
+    const initialInput = screen.getByLabelText(/Inversión Inicial|Initial Investment/i);
+    const contributionInput = screen.getByLabelText(/Aporte Mensual|Monthly Contribution/i);
+    const durationInput = screen.getByLabelText(/Duración \(meses\)|Duration \(months\)/i);
+    const rateInput = screen.getByLabelText(/Tasa de Interés Anual|Annual Interest Rate/i);
+    await user.clear(initialInput);
+    await user.type(initialInput, '10000');
+    await user.clear(contributionInput);
+    await user.type(contributionInput, '500');
+    await user.clear(durationInput);
+    await user.type(durationInput, '60');
+    await user.clear(rateInput);
+    await user.type(rateInput, '7');
+  }
+
   it('calculates investment projection when user fills form and clicks calculate', async () => {
     const user = userEvent.setup();
     render(
@@ -43,6 +58,8 @@ describe('Investment Flow Integration', () => {
     );
 
     expect(screen.getAllByRole('heading', { name: /Simulador de Inversión/i }).length).toBeGreaterThan(0);
+
+    await fillInvestmentForm(user);
 
     const calculateButton = screen.getByRole('button', { name: /calcular/i });
     await user.click(calculateButton);
@@ -75,6 +92,8 @@ describe('Investment Flow Integration', () => {
         <InvestmentPage />
       </IntegrationWrapper>
     );
+
+    await fillInvestmentForm(user);
 
     const calculateButton = screen.getByRole('button', { name: /calcular/i });
     await user.click(calculateButton);

@@ -53,8 +53,8 @@ describe('NumberInput', () => {
     const input = screen.getByLabelText('Amount');
     fireEvent.change(input, { target: { value: '' } });
 
-    // Implementation does not call onChange when value is empty (avoids defaulting to 0)
-    expect(handleChange).not.toHaveBeenCalled();
+    // Al vaciar el campo se notifica '' (salvo allowEmptyAsZero que envía 0)
+    expect(handleChange).toHaveBeenCalledWith('');
   });
 
   it('displays error message', () => {

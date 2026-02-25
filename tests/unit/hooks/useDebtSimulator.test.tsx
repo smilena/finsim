@@ -8,15 +8,13 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { useDebtSimulator } from '@/features/debt/useDebtSimulator';
 
 describe('useDebtSimulator', () => {
-  it('initializes with default values', () => {
+  it('initializes with empty form (no default numeric values)', () => {
     const { result } = renderHook(() => useDebtSimulator());
 
-    expect(result.current.inputs).toEqual({
-      loanAmount: 200000,
-      annualInterestRate: 5,
-      termMonths: 360,
-      paymentFrequency: 'monthly',
-    });
+    expect(result.current.inputs.paymentFrequency).toBe('monthly');
+    expect(result.current.inputs.loanAmount).toBeUndefined();
+    expect(result.current.inputs.annualInterestRate).toBeUndefined();
+    expect(result.current.inputs.termMonths).toBeUndefined();
     expect(result.current.prepayments).toEqual([]);
     expect(result.current.errors).toEqual({});
     expect(result.current.results).toBeNull();
@@ -32,6 +30,11 @@ describe('useDebtSimulator', () => {
   it('displays results when calculate is called with valid inputs', async () => {
     const { result } = renderHook(() => useDebtSimulator());
 
+    act(() => {
+      result.current.updateInput('loanAmount', 200000);
+      result.current.updateInput('annualInterestRate', 5);
+      result.current.updateInput('termMonths', 360);
+    });
     act(() => {
       result.current.calculate();
     });
@@ -60,6 +63,11 @@ describe('useDebtSimulator', () => {
   it('adds prepayment and triggers immediate recalc after first calculation', async () => {
     const { result } = renderHook(() => useDebtSimulator());
 
+    act(() => {
+      result.current.updateInput('loanAmount', 200000);
+      result.current.updateInput('annualInterestRate', 5);
+      result.current.updateInput('termMonths', 360);
+    });
     act(() => {
       result.current.calculate();
     });
@@ -93,6 +101,11 @@ describe('useDebtSimulator', () => {
   it('removes prepayment and triggers immediate recalc', async () => {
     const { result } = renderHook(() => useDebtSimulator());
 
+    act(() => {
+      result.current.updateInput('loanAmount', 200000);
+      result.current.updateInput('annualInterestRate', 5);
+      result.current.updateInput('termMonths', 360);
+    });
     act(() => {
       result.current.calculate();
     });
@@ -147,6 +160,11 @@ describe('useDebtSimulator', () => {
     const { result } = renderHook(() => useDebtSimulator());
 
     act(() => {
+      result.current.updateInput('loanAmount', 200000);
+      result.current.updateInput('annualInterestRate', 5);
+      result.current.updateInput('termMonths', 360);
+    });
+    act(() => {
       result.current.calculate();
     });
 
@@ -159,5 +177,6 @@ describe('useDebtSimulator', () => {
     expect(result.current.results).toBeNull();
     expect(result.current.prepayments).toEqual([]);
     expect(result.current.errors).toEqual({});
+    expect(result.current.inputs.loanAmount).toBeUndefined();
   });
 });
