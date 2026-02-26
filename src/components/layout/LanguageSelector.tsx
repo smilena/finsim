@@ -25,7 +25,8 @@ export function LanguageSelector({ fullWidth = false, compact = false }: Languag
   const isCollapsedCompact = compact && !fullWidth;
   const isLight = mode === 'light';
 
-  const activeVariant = isLight ? 'default' : 'secondary';
+  // Mismo color (primary) en claro y oscuro; antes en oscuro se usaba secondary (morado).
+  const activeVariant = 'default';
 
   return (
     <div
