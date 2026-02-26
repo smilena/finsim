@@ -24,6 +24,22 @@ export function formatCurrency(amount: number): string {
 }
 
 /**
+ * Format number as Colombian pesos (COP)
+ * Uses $ and dot as thousands separator (e.g. $1.890.577,00)
+ *
+ * @param amount - Numeric amount
+ * @returns Formatted currency string
+ */
+export function formatCurrencyCOP(amount: number): string {
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+}
+
+/**
  * Format number as percentage
  *
  * @param value - Percentage value (e.g., 7.5 for 7.5%)

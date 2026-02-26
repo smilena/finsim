@@ -22,6 +22,7 @@
     "home": "Home",
     "investment": "Investment",
     "debt": "Debt",
+    "taxes": "Taxes",
     "settings": "Settings",
     "language": "Language",
     "skipToContent": "Skip to main content",
@@ -106,6 +107,54 @@
       "page": "Page",
       "rowsPerPage": "Rows per page"
     }
+  },
+  "taxes": {
+    "title": "Salary Tax Calculator",
+    "subtitle": "Calculate your income tax withholding and net salary under current Colombian rules (2026).",
+    "help": "Tip:",
+    "helpText": "Calculations include pension (4%), health (4%), transport allowance when applicable, and withholding per DIAN table.",
+    "infoAlert": "This tool is for guidance only. For official filings consult an accountant or the tax authority.",
+    "form": {
+      "dataLabel": "Salary details",
+      "salary": "Gross salary",
+      "periodicity": "Periodicity",
+      "monthly": "Monthly",
+      "annual": "Annual",
+      "salaryPlaceholder": "e.g. 2000000"
+    },
+    "results": {
+      "title": "Results summary",
+      "retention": "Income tax withholding",
+      "netPay": "Net pay",
+      "totalTaxes": "Total taxes",
+      "effectiveRate": "Average tax rate",
+      "marginalRate": "Marginal tax rate",
+      "perMonth": "per month",
+      "perYear": "per year"
+    },
+    "chart": {
+      "deductionsTable": "Deductions breakdown",
+      "distribution": "Salary distribution",
+      "breakdown": "Net pay vs taxes"
+    },
+    "deductions": {
+      "concept": "Concept",
+      "amount": "Amount",
+      "grossSalary": "Salary",
+      "pension": "Mandatory pension",
+      "health": "Mandatory health (EPS)",
+      "fsp": "Pension Solidarity Fund (FSP)",
+      "transport": "Transport allowance",
+      "retention": "Income tax withholding",
+      "totalTaxes": "Total taxes",
+      "totalTaxesBreakdown": "FSP + Withholding",
+      "totalTaxesBreakdownRetentionOnly": "Withholding only",
+      "netPay": "Net pay"
+    },
+    "emptyTitle": "Enter your salary and periodicity",
+    "emptyDescription": "Click Calculate to see withholding, deductions and net salary under Colombia 2026 rules.",
+    "summary": "Summary",
+    "summaryParagraph": "With an {{periodicityLabel}} salary of {{grossFormatted}} in Colombia, you will be taxed {{taxesFormatted}}. That is, your net salary will be {{netAnnualFormatted}} per year or {{netMonthlyFormatted}} per month. Your average tax rate is {{effectiveRate}}% and your marginal tax rate is {{marginalRate}}%. This marginal rate means your additional income will be taxed at this rate. For example, for an increase of {{incrementFormatted}} in your salary, you will pay {{taxIncrementFormatted}} in additional taxes, keeping {{netIncrementFormatted}}."
   },
   "investment": {
     "title": "Investment Simulator",

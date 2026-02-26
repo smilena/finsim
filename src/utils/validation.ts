@@ -5,6 +5,8 @@
 import type { ValidationErrors, NumericConstraint } from '@/types/common.types';
 import type { InvestmentInput } from '@/domain/investment/investment.types';
 import type { DebtInput, Prepayment } from '@/domain/debt/debt.types';
+import type { TaxInput } from '@/domain/taxes/taxes.types';
+import { INPUT_CONSTRAINTS } from '@/types/common.types';
 
 /**
  * Check if numeric value is within constraints
@@ -228,6 +230,35 @@ export function validatePrepaymentInput(
   // Validate strategy
   if (!prepayment.strategy) {
     errors.strategy = 'Prepayment strategy is required';
+  }
+
+  return errors;
+}
+
+/**
+ * Validate tax (salary) input
+ *
+ * @param input - Tax form input to validate
+ * @returns Validation errors (empty object if valid)
+ */
+export function validateTaxInput(input: Partial<TaxInput>): ValidationErrors {
+  const errors: ValidationErrors = {};
+  const { grossSalary, periodicity } = input;
+  const constraint = INPUT_CONSTRAINTS.grossSalary;
+
+  if (grossSalary !== undefined && grossSalary !== null) {
+    const error = validatePositiveNumber(grossSalary, 'Gross salary');
+    if (error) {
+      errors.grossSalary = error;
+    } else if (constraint.max !== undefined && grossSalary > constraint.max) {
+      errors.grossSalary = `Gross salary must be at most ${constraint.max.toLocaleString()}`;
+    }
+  } else {
+    errors.grossSalary = 'Gross salary is required';
+  }
+
+  if (!periodicity || (periodicity !== 'monthly' && periodicity !== 'annual')) {
+    errors.periodicity = 'Periodicity is required (monthly or annual)';
   }
 
   return errors;

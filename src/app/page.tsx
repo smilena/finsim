@@ -6,7 +6,7 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
-import { TrendingUp, CreditCard } from 'lucide-react';
+import { TrendingUp, CreditCard, Calculator } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -24,7 +24,7 @@ export default function HomePage() {
         </p>
       </div>
 
-      <div className="grid min-w-0 grid-cols-1 gap-8 mt-8 md:grid-cols-2">
+      <div className="grid min-w-0 grid-cols-1 gap-8 mt-8 md:grid-cols-2 lg:grid-cols-3">
         <Link href="/investment" className="group">
           <Card className="h-full transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
             <CardContent className="p-6">
@@ -60,6 +60,26 @@ export default function HomePage() {
               <p className="text-sm text-foreground-secondary">
                 <strong>{t('common.calculate')}:</strong> {t('debt.totalInterest')},{' '}
                 {t('debt.prepayment.title').toLowerCase()}
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/taxes" className="group">
+          <Card className="h-full transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <Calculator className="h-12 w-12 text-info mr-4" />
+                <h2 className="text-2xl font-semibold text-foreground">
+                  {t('taxes.title')}
+                </h2>
+              </div>
+              <p className="text-base text-foreground-secondary mb-4">
+                {t('taxes.subtitle')}
+              </p>
+              <p className="text-sm text-foreground-secondary">
+                <strong>{t('common.calculate')}:</strong> {t('taxes.results.retention')},{' '}
+                {t('taxes.results.netPay').toLowerCase()}, {t('taxes.summary').toLowerCase()}
               </p>
             </CardContent>
           </Card>

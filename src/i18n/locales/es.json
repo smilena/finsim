@@ -22,6 +22,7 @@
     "home": "Inicio",
     "investment": "Inversión",
     "debt": "Deuda",
+    "taxes": "Impuestos",
     "settings": "Ajustes",
     "language": "Idioma",
     "skipToContent": "Saltar al contenido principal",
@@ -106,6 +107,54 @@
       "page": "Página",
       "rowsPerPage": "Filas por página"
     }
+  },
+  "taxes": {
+    "title": "Calculadora de Impuestos sobre Salarios",
+    "subtitle": "Calcula tu retención en la fuente y salario neto según la normativa colombiana vigente (2026).",
+    "help": "Consejo:",
+    "helpText": "Los cálculos consideran pensión (4%), salud (4%), auxilio de transporte cuando aplica y retención en la fuente según tabla DIAN.",
+    "infoAlert": "Esta herramienta es orientativa. Para declaraciones oficiales consulte a un contador o la DIAN.",
+    "form": {
+      "dataLabel": "Datos del salario",
+      "salary": "Salario bruto",
+      "periodicity": "Periodicidad",
+      "monthly": "Mensual",
+      "annual": "Anual",
+      "salaryPlaceholder": "Ej: 2000000"
+    },
+    "results": {
+      "title": "Resumen de resultados",
+      "retention": "Retención en la fuente",
+      "netPay": "Pago neto",
+      "totalTaxes": "Impuestos totales",
+      "effectiveRate": "Tasa impositiva media",
+      "marginalRate": "Tasa impositiva marginal",
+      "perMonth": "al mes",
+      "perYear": "al año"
+    },
+    "chart": {
+      "deductionsTable": "Desglose de deducciones",
+      "distribution": "Distribución del salario",
+      "breakdown": "Neto e impuestos"
+    },
+    "deductions": {
+      "concept": "Concepto",
+      "amount": "Valor",
+      "grossSalary": "Salario",
+      "pension": "Pensión obligatoria",
+      "health": "Plan obligatorio de salud (EPS)",
+      "fsp": "Fondo de Solidaridad Pensional (FSP)",
+      "transport": "Auxilio de transporte",
+      "retention": "Retención en la fuente",
+      "totalTaxes": "Impuestos totales",
+      "totalTaxesBreakdown": "FSP + Retención en la fuente",
+      "totalTaxesBreakdownRetentionOnly": "Retención en la fuente",
+      "netPay": "Pago neto"
+    },
+    "emptyTitle": "Ingresa tu salario y periodicidad",
+    "emptyDescription": "Haz clic en Calcular para ver la retención, deducciones y salario neto según normativa Colombia 2026.",
+    "summary": "Resumen",
+    "summaryParagraph": "Con un salario {{periodicityLabel}} de {{grossFormatted}} en Colombia, te gravarán {{taxesFormatted}}. Es decir, tu salario neto será de {{netAnnualFormatted}} al año o {{netMonthlyFormatted}} al mes. Tu tasa impositiva media es de {{effectiveRate}}% y tu tasa impositiva marginal es de {{marginalRate}}%. Esta tasa marginal significa que tus ingresos adicionales se gravarán en función de este tipo. Por ejemplo, por un incremento de {{incrementFormatted}} en tu salario, pagarás {{taxIncrementFormatted}} en impuestos adicionales, conservando {{netIncrementFormatted}}."
   },
   "investment": {
     "title": "Simulador de Inversión",

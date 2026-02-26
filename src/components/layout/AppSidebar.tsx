@@ -10,7 +10,7 @@ import { ROUTES } from '@/types/common.types';
 import type { MenuItem } from '@/types/common.types';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Home, TrendingUp, CreditCard, LineChart, Coins, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Home, TrendingUp, CreditCard, Calculator, LineChart, Coins, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/layout/ThemeToggle';
 import { LanguageSelector } from '@/components/layout/LanguageSelector';
@@ -57,6 +57,7 @@ export function AppSidebar({
     { label: t('nav.home'), path: ROUTES.HOME, icon: <Home className="h-5 w-5 shrink-0" /> },
     { label: t('nav.investment'), path: ROUTES.INVESTMENT, icon: <TrendingUp className="h-5 w-5 shrink-0" /> },
     { label: t('nav.debt'), path: ROUTES.DEBT, icon: <CreditCard className="h-5 w-5 shrink-0" /> },
+    { label: t('nav.taxes'), path: ROUTES.TAXES, icon: <Calculator className="h-5 w-5 shrink-0" /> },
   ];
 
   return (

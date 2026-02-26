@@ -39,6 +39,7 @@ export const ROUTES = {
   HOME: '/',
   INVESTMENT: '/investment',
   DEBT: '/debt',
+  TAXES: '/taxes',
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;
@@ -130,6 +131,7 @@ export const INPUT_CONSTRAINTS = {
   termMonths: { min: 1, max: 600, step: 1, decimals: 0 },
   prepaymentAmount: { min: 0, max: 100_000_000, step: 0.01, decimals: 2 },
   prepaymentMonth: { min: 1, max: 600, step: 1, decimals: 0 },
+  grossSalary: { min: 0, max: 1_000_000_000, step: 0.01, decimals: 2 },
 } as const;
 
 /**
