@@ -14,6 +14,9 @@ import type { ValidationErrors } from '@/types/common.types';
 export type TaxFormState = {
   grossSalary?: number;
   periodicity: SalaryPeriodicity;
+  dependents?: number;
+  medicinaPrepagadaMensual?: number;
+  aportesVoluntariosPensionMensual?: number;
 };
 
 export interface UseTaxCalculatorReturn {
@@ -50,6 +53,9 @@ export function useTaxCalculator(): UseTaxCalculatorReturn {
     const fullInput: TaxInput = {
       grossSalary: inputs.grossSalary as number,
       periodicity: inputs.periodicity,
+      dependents: inputs.dependents ?? 0,
+      medicinaPrepagadaMensual: inputs.medicinaPrepagadaMensual ?? 0,
+      aportesVoluntariosPensionMensual: inputs.aportesVoluntariosPensionMensual ?? 0,
     };
 
     setTimeout(() => {
@@ -74,10 +80,9 @@ export function useTaxCalculator(): UseTaxCalculatorReturn {
   const updateInput = (field: keyof TaxFormState, value: string | number) => {
     const next = value === '' ? undefined : value;
     if (field === 'periodicity') {
-      setInputs((prev) => ({
-        ...prev,
-        periodicity: value as SalaryPeriodicity,
-      }));
+      const nextPeriodicity: SalaryPeriodicity =
+        value === 'annual' ? 'annual' : 'monthly';
+      setInputs((prev) => ({ ...prev, periodicity: nextPeriodicity }));
     } else {
       setInputs((prev) => ({
         ...prev,

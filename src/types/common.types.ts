@@ -132,6 +132,9 @@ export const INPUT_CONSTRAINTS = {
   prepaymentAmount: { min: 0, max: 100_000_000, step: 0.01, decimals: 2 },
   prepaymentMonth: { min: 1, max: 600, step: 1, decimals: 0 },
   grossSalary: { min: 0, max: 1_000_000_000, step: 0.01, decimals: 2 },
+  dependents: { min: 0, max: 15, step: 1, decimals: 0 },
+  medicinaPrepagada: { min: 0, max: 1_000_000, step: 0.01, decimals: 2 },
+  aportesVoluntarios: { min: 0, max: 50_000_000, step: 0.01, decimals: 2 },
 } as const;
 
 /**

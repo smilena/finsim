@@ -13,7 +13,7 @@ export type SalaryPeriodicity = 'monthly' | 'annual';
  */
 export interface TaxInput {
   /**
-   * Gross salary amount (in COP)
+   * Gross salary amount (in COP) - base salary, excludes transport allowance
    * @constraint Positive number
    */
   grossSalary: number;
@@ -22,6 +22,15 @@ export interface TaxInput {
    * Whether the amount is per month or per year
    */
   periodicity: SalaryPeriodicity;
+
+  /** Number of dependents (reduces taxable base) - optional, default 0 */
+  dependents?: number;
+
+  /** Monthly prepaid health insurance (deductible up to 16 UVT) - optional, default 0 */
+  medicinaPrepagadaMensual?: number;
+
+  /** Monthly voluntary pension contributions (deductible) - optional, default 0 */
+  aportesVoluntariosPensionMensual?: number;
 }
 
 /**
@@ -32,17 +41,25 @@ export interface DeductionLine {
   label: string;
   /** Translation key for the concept */
   labelKey: string;
+  /** Optional interpolation params for labelKey (e.g. { count: 2 }) */
+  labelParams?: Record<string, number | string>;
   /** Amount (negative for deductions, positive for additions like auxilio) */
   amount: number;
   /** Whether this is a deduction (negative impact) or addition */
   isDeduction: boolean;
+  /** Optional tooltip translation key (e.g. for "Auxilio no genera descuentos") */
+  tooltipKey?: string;
 }
 
 /**
  * Result of the tax calculation
  */
 export interface TaxResult {
-  /** Gross salary per month (COP) */
+  /** Base salary per month (COP) - IBC, excludes transport allowance */
+  baseSalaryMonthly: number;
+  /** Transport allowance per month (COP) - 0 if salary > 2 SMMLV */
+  transportAllowance: number;
+  /** Gross salary per month (COP) = baseSalary + transportAllowance when applicable */
   grossSalaryMonthly: number;
   /** Gross salary per year (COP) */
   grossSalaryAnnual: number;
@@ -52,9 +69,7 @@ export interface TaxResult {
   health: number;
   /** Fondo de Solidaridad Pensional (FSP, si IBC >= 4 SMMLV) - monthly */
   fsp: number;
-  /** Transport allowance (if applicable) - monthly, positive */
-  transportAllowance: number;
-  /** Taxable base for retention (gross - pension - health - fsp, FSP no constitutivo de renta) - monthly */
+  /** Taxable base for retention (baseSalary - pension - health - fsp, FSP no constitutivo de renta) - monthly */
   taxableBaseMonthly: number;
   /** Income tax withholding (retención en la fuente) - monthly */
   retention: number;

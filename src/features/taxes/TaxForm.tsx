@@ -54,15 +54,47 @@ export function TaxForm({
               error={errors.grossSalary}
               prefix="$"
               constraints={INPUT_CONSTRAINTS.grossSalary}
+              helperText={t('taxes.form.salaryHelper')}
               required
             />
 
             <SelectField
               label={t('taxes.form.periodicity')}
-              value={inputs.periodicity}
+              value={inputs.periodicity ?? 'monthly'}
               onChange={(value) => onInputChange('periodicity', value as SalaryPeriodicity)}
               options={periodicityOptions}
               error={errors.periodicity}
+            />
+
+            <NumberInput
+              label={t('taxes.form.dependents')}
+              value={inputs.dependents ?? ''}
+              onChange={(value) => onInputChange('dependents', value)}
+              error={errors.dependents}
+              constraints={INPUT_CONSTRAINTS.dependents}
+              helperText={t('taxes.form.dependentsHelper')}
+              allowEmptyAsZero
+            />
+
+            <NumberInput
+              label={t('taxes.form.medicinaPrepagada')}
+              value={inputs.medicinaPrepagadaMensual ?? ''}
+              onChange={(value) => onInputChange('medicinaPrepagadaMensual', value)}
+              error={errors.medicinaPrepagadaMensual}
+              prefix="$"
+              constraints={INPUT_CONSTRAINTS.medicinaPrepagada}
+              helperText={t('taxes.form.medicinaPrepagadaHelper')}
+              allowEmptyAsZero
+            />
+
+            <NumberInput
+              label={t('taxes.form.aportesVoluntarios')}
+              value={inputs.aportesVoluntariosPensionMensual ?? ''}
+              onChange={(value) => onInputChange('aportesVoluntariosPensionMensual', value)}
+              error={errors.aportesVoluntariosPensionMensual}
+              prefix="$"
+              constraints={INPUT_CONSTRAINTS.aportesVoluntarios}
+              allowEmptyAsZero
             />
 
             <div className="md:col-span-2 flex gap-4 justify-end">

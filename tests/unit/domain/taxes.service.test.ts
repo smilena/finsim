@@ -19,10 +19,10 @@ describe('Tax Service', () => {
     expect(result.totalDeductionsMonthly).toBe(expectedTotal);
   });
 
-  it('net pay = gross - totalDeductions + transportAllowance', () => {
+  it('net pay = baseSalary - totalDeductions + transportAllowance', () => {
     const result = calculateTax({ grossSalary: 2_000_000, periodicity: 'monthly' });
     const expectedNet =
-      result.grossSalaryMonthly -
+      result.baseSalaryMonthly -
       result.totalDeductionsMonthly +
       result.transportAllowance;
     expect(result.netPayMonthly).toBe(expectedNet);
@@ -41,5 +41,22 @@ describe('Tax Service', () => {
     expect(annual.grossSalaryMonthly).toBe(monthly.grossSalaryMonthly);
     expect(annual.retention).toBe(monthly.retention);
     expect(annual.netPayMonthly).toBe(monthly.netPayMonthly);
+  });
+
+  it('minimum wage: base salary and auxilio separated, deductions only on salary, retention 0', () => {
+    const SMLMV = 1_750_905;
+    const AUXILIO = 249_095;
+    const result = calculateTax({ grossSalary: SMLMV, periodicity: 'monthly' });
+    expect(result.baseSalaryMonthly).toBe(SMLMV);
+    expect(result.transportAllowance).toBe(AUXILIO);
+    expect(result.retention).toBe(0);
+    const pension = SMLMV * 0.04;
+    const health = SMLMV * 0.04;
+    expect(result.pension).toBe(pension);
+    expect(result.health).toBe(health);
+    const expectedNet = SMLMV - pension - health + AUXILIO;
+    expect(result.netPayMonthly).toBe(expectedNet);
+    expect(result.netPayMonthly).toBeGreaterThanOrEqual(1_850_000);
+    expect(result.netPayMonthly).toBeLessThanOrEqual(1_870_000);
   });
 });

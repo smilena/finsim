@@ -39,17 +39,24 @@ export const FSP_BRACKETS: Array<{ limitSMMLV: number; rate: number }> = [
 /** Retención en la fuente inicia a partir de este tope en UVT mensuales (Art. 383 ET) */
 export const RETENTION_START_UVT = 95;
 
+/** Máximo deducible medicina prepagada (UVT mensuales) */
+export const MEDICINA_PREPAGADA_MAX_UVT = 16;
+
+/** Deducción por dependiente (UVT mensuales, aproximado según normativa) */
+export const DEDUCCION_DEPENDIENTE_UVT = 4;
+
 /**
- * Tramos de retención en la fuente 2026 (ingresos laborales)
- * Impuesto en UVT = base acumulada en UVT según tabla
- * Cada tramo: [hasta UVT, tarifa marginal 0-1, impuesto acumulado hasta este tramo en UVT]
+ * Tramos de retención en la fuente 2026 (ingresos laborales) - Art. 383 ET
+ * Fuente: Decreto 1625/2016, Resolución 000238/2025 (UVT), tabla Art. 383.
+ * Fórmula por tramo: (Ingreso UVT - límite anterior) × tarifa marginal + impuesto acumulado al inicio del tramo.
+ * Impuesto acumulado = retención en UVT hasta el límite inferior del tramo.
  */
 export interface RetentionBracket {
   /** Límite superior del tramo en UVT */
   limitUVT: number;
   /** Tarifa marginal en este tramo (0.19 = 19%) */
   marginalRate: number;
-  /** Impuesto acumulado en UVT al inicio del tramo */
+  /** Impuesto acumulado en UVT al inicio del tramo (retención hasta el límite anterior) */
   accumulatedTaxUVT: number;
 }
 
@@ -58,7 +65,7 @@ export const RETENTION_BRACKETS_2026: RetentionBracket[] = [
   { limitUVT: 150, marginalRate: 0.19, accumulatedTaxUVT: 0 },
   { limitUVT: 360, marginalRate: 0.28, accumulatedTaxUVT: 10.45 },
   { limitUVT: 640, marginalRate: 0.33, accumulatedTaxUVT: 69.25 },
-  { limitUVT: 945, marginalRate: 0.35, accumulatedTaxUVT: 169.45 },
-  { limitUVT: 2300, marginalRate: 0.37, accumulatedTaxUVT: 276.40 },
-  { limitUVT: Infinity, marginalRate: 0.39, accumulatedTaxUVT: 1003.90 },
+  { limitUVT: 945, marginalRate: 0.35, accumulatedTaxUVT: 161.65 },
+  { limitUVT: 2300, marginalRate: 0.37, accumulatedTaxUVT: 268.4 },
+  { limitUVT: Infinity, marginalRate: 0.39, accumulatedTaxUVT: 769.75 },
 ];

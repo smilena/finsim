@@ -33,6 +33,16 @@ describe('Tax Formulas', () => {
       expect(calculateRetentionUVT(200)).toBeCloseTo(24.45, 2);
     });
 
+    it('calculates bracket 360-640 UVT at 33% (Art. 383 table)', () => {
+      // At 500 UVT: 69.25 + (500 - 360) * 0.33 = 69.25 + 46.2 = 115.45 UVT
+      expect(calculateRetentionUVT(500)).toBeCloseTo(115.45, 2);
+    });
+
+    it('calculates bracket 2300+ UVT at 39% (Art. 383 table)', () => {
+      // At 2500 UVT: 769.75 + (2500 - 2300) * 0.39 = 769.75 + 78 = 847.75 UVT
+      expect(calculateRetentionUVT(2500)).toBeCloseTo(847.75, 2);
+    });
+
     it('returns marginal rate 0 below 95 UVT', () => {
       expect(getMarginalRateForBaseUVT(50)).toBe(0);
       expect(getMarginalRateForBaseUVT(95)).toBe(0);
